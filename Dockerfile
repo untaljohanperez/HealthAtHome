@@ -8,5 +8,5 @@ RUN gradle build --stacktrace
 
 FROM openjdk:8-jre-alpine
 COPY --from=build-env /home/gradle/build/libs/gradle.jar /app/app.jar
-EXPOSE 4000
+EXPOSE 8080
 CMD java -Djava.security.egd=file:/dev/./urandom $JAVA_OPTIONS -jar /app/app.jar
