@@ -1,0 +1,267 @@
+package io.swagger.model;
+
+import java.util.Objects;
+import com.fasterxml.jackson.annotation.JsonProperty;
+import com.fasterxml.jackson.annotation.JsonCreator;
+import io.swagger.annotations.ApiModel;
+import io.swagger.annotations.ApiModelProperty;
+import io.swagger.model.Category;
+import java.util.ArrayList;
+import java.util.List;
+import javax.validation.Valid;
+import javax.validation.constraints.*;
+
+/**
+ * Product
+ */
+@javax.annotation.Generated(value = "io.swagger.codegen.languages.SpringCodegen", date = "2018-03-08T15:45:56.178Z")
+
+public class Product   {
+  @JsonProperty("id")
+  private Integer id = null;
+
+  @JsonProperty("name")
+  private String name = null;
+
+  @JsonProperty("description")
+  private String description = null;
+
+  @JsonProperty("medical_characteristics")
+  private String medicalCharacteristics = null;
+
+  @JsonProperty("volume")
+  private Integer volume = null;
+
+  @JsonProperty("photos")
+  private List<String> photos = null;
+
+  @JsonProperty("platform")
+  private String platform = null;
+
+  @JsonProperty("category")
+  private Category category = null;
+
+  public Product id(Integer id) {
+    this.id = id;
+    return this;
+  }
+
+   /**
+   * Get id
+   * @return id
+  **/
+  @ApiModelProperty(value = "")
+
+
+  public Integer getId() {
+    return id;
+  }
+
+  public void setId(Integer id) {
+    this.id = id;
+  }
+
+  public Product name(String name) {
+    this.name = name;
+    return this;
+  }
+
+   /**
+   * Get name
+   * @return name
+  **/
+  @ApiModelProperty(required = true, value = "")
+  @NotNull
+
+
+  public String getName() {
+    return name;
+  }
+
+  public void setName(String name) {
+    this.name = name;
+  }
+
+  public Product description(String description) {
+    this.description = description;
+    return this;
+  }
+
+   /**
+   * Get description
+   * @return description
+  **/
+  @ApiModelProperty(value = "")
+
+
+  public String getDescription() {
+    return description;
+  }
+
+  public void setDescription(String description) {
+    this.description = description;
+  }
+
+  public Product medicalCharacteristics(String medicalCharacteristics) {
+    this.medicalCharacteristics = medicalCharacteristics;
+    return this;
+  }
+
+   /**
+   * Get medicalCharacteristics
+   * @return medicalCharacteristics
+  **/
+  @ApiModelProperty(value = "")
+
+
+  public String getMedicalCharacteristics() {
+    return medicalCharacteristics;
+  }
+
+  public void setMedicalCharacteristics(String medicalCharacteristics) {
+    this.medicalCharacteristics = medicalCharacteristics;
+  }
+
+  public Product volume(Integer volume) {
+    this.volume = volume;
+    return this;
+  }
+
+   /**
+   * Get volume
+   * @return volume
+  **/
+  @ApiModelProperty(value = "")
+
+
+  public Integer getVolume() {
+    return volume;
+  }
+
+  public void setVolume(Integer volume) {
+    this.volume = volume;
+  }
+
+  public Product photos(List<String> photos) {
+    this.photos = photos;
+    return this;
+  }
+
+  public Product addPhotosItem(String photosItem) {
+    if (this.photos == null) {
+      this.photos = new ArrayList<String>();
+    }
+    this.photos.add(photosItem);
+    return this;
+  }
+
+   /**
+   * Get photos
+   * @return photos
+  **/
+  @ApiModelProperty(value = "")
+
+
+  public List<String> getPhotos() {
+    return photos;
+  }
+
+  public void setPhotos(List<String> photos) {
+    this.photos = photos;
+  }
+
+  public Product platform(String platform) {
+    this.platform = platform;
+    return this;
+  }
+
+   /**
+   * Get platform
+   * @return platform
+  **/
+  @ApiModelProperty(value = "")
+
+
+  public String getPlatform() {
+    return platform;
+  }
+
+  public void setPlatform(String platform) {
+    this.platform = platform;
+  }
+
+  public Product category(Category category) {
+    this.category = category;
+    return this;
+  }
+
+   /**
+   * Get category
+   * @return category
+  **/
+  @ApiModelProperty(value = "")
+
+  @Valid
+
+  public Category getCategory() {
+    return category;
+  }
+
+  public void setCategory(Category category) {
+    this.category = category;
+  }
+
+
+  @Override
+  public boolean equals(java.lang.Object o) {
+    if (this == o) {
+      return true;
+    }
+    if (o == null || getClass() != o.getClass()) {
+      return false;
+    }
+    Product product = (Product) o;
+    return Objects.equals(this.id, product.id) &&
+        Objects.equals(this.name, product.name) &&
+        Objects.equals(this.description, product.description) &&
+        Objects.equals(this.medicalCharacteristics, product.medicalCharacteristics) &&
+        Objects.equals(this.volume, product.volume) &&
+        Objects.equals(this.photos, product.photos) &&
+        Objects.equals(this.platform, product.platform) &&
+        Objects.equals(this.category, product.category);
+  }
+
+  @Override
+  public int hashCode() {
+    return Objects.hash(id, name, description, medicalCharacteristics, volume, photos, platform, category);
+  }
+
+  @Override
+  public String toString() {
+    StringBuilder sb = new StringBuilder();
+    sb.append("class Product {\n");
+    
+    sb.append("    id: ").append(toIndentedString(id)).append("\n");
+    sb.append("    name: ").append(toIndentedString(name)).append("\n");
+    sb.append("    description: ").append(toIndentedString(description)).append("\n");
+    sb.append("    medicalCharacteristics: ").append(toIndentedString(medicalCharacteristics)).append("\n");
+    sb.append("    volume: ").append(toIndentedString(volume)).append("\n");
+    sb.append("    photos: ").append(toIndentedString(photos)).append("\n");
+    sb.append("    platform: ").append(toIndentedString(platform)).append("\n");
+    sb.append("    category: ").append(toIndentedString(category)).append("\n");
+    sb.append("}");
+    return sb.toString();
+  }
+
+  /**
+   * Convert the given object to string with each line indented by 4 spaces
+   * (except the first line).
+   */
+  private String toIndentedString(java.lang.Object o) {
+    if (o == null) {
+      return "null";
+    }
+    return o.toString().replace("\n", "\n    ");
+  }
+}
+
