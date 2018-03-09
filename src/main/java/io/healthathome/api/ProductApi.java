@@ -5,7 +5,7 @@
  */
 package io.healthathome.api;
 
-import io.healthathome.model.Product;
+import io.healthathome.dto.Product;
 
 import io.swagger.annotations.*;
 import org.springframework.http.ResponseEntity;

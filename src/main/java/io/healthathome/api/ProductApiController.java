@@ -1,6 +1,6 @@
 package io.healthathome.api;
 
-import io.healthathome.model.Product;
+import io.healthathome.dto.Product;
 import io.healthathome.service.ProductService;
 import io.swagger.annotations.ApiParam;
 import org.slf4j.Logger;
@@ -27,11 +27,11 @@ public class ProductApiController implements ProductApi {
         return new ResponseEntity<Product>(productService.insertOrUpdate(product), HttpStatus.OK);
     }
 
+
     public ResponseEntity<Void> updateProduct(@ApiParam(value = "Product object that needs to be added", required = true) @Valid @RequestBody Product product) {
         productService.update(product);
         return new ResponseEntity<Void>(HttpStatus.OK);
     }
-
     public ResponseEntity<Void> deleteProduct(@ApiParam(value = "Product id to delete", required = true) @PathVariable("id") String id) {
         productService.delete(id);
         return new ResponseEntity<Void>(HttpStatus.OK);

@@ -1,4 +1,4 @@
-package io.healthathome.model;
+package io.healthathome.dto;
 
 import java.util.Objects;
 import com.fasterxml.jackson.annotation.JsonProperty;

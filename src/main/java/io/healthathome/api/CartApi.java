@@ -5,9 +5,9 @@
  */
 package io.healthathome.api;
 
-import io.healthathome.model.Cart;
-import io.healthathome.model.Item;
-import io.healthathome.model.Pay;
+import io.healthathome.dto.Cart;
+import io.healthathome.dto.Item;
+import io.healthathome.dto.Pay;
 
 import io.swagger.annotations.*;
 import org.springframework.http.ResponseEntity;

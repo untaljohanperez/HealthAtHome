@@ -1,49 +1,39 @@
-package io.healthathome.model;
+package io.healthathome.dto;
 
 import java.util.Objects;
 import com.fasterxml.jackson.annotation.JsonProperty;
 import io.swagger.annotations.ApiModelProperty;
 
-import java.util.ArrayList;
-import java.util.List;
-import javax.validation.Valid;
+import javax.validation.constraints.*;
 
 /**
- * Cart
+ * Pay
  */
 @javax.annotation.Generated(value = "io.swagger.codegen.languages.SpringCodegen", date = "2018-03-08T15:45:56.178Z")
 
-public class Cart   {
-  @JsonProperty("items")
-  private List<Item> items = null;
+public class Pay   {
+  @JsonProperty("user")
+  private String user = null;
 
-  public Cart items(List<Item> items) {
-    this.items = items;
-    return this;
-  }
-
-  public Cart addItemsItem(Item itemsItem) {
-    if (this.items == null) {
-      this.items = new ArrayList<Item>();
-    }
-    this.items.add(itemsItem);
+  public Pay user(String user) {
+    this.user = user;
     return this;
   }
 
    /**
-   * Get items
-   * @return items
+   * Get user
+   * @return user
   **/
-  @ApiModelProperty(value = "")
+  @ApiModelProperty(required = true, value = "")
+  @NotNull
 
-  @Valid
 
-  public List<Item> getItems() {
-    return items;
+  public String getUser() {
+    return user;
   }
 
-  public void setItems(List<Item> items) {
-    this.items = items;
+  public void setUser(String user) {
+    this.user = user;
   }
 
 
@@ -55,21 +45,21 @@ public class Cart   {
     if (o == null || getClass() != o.getClass()) {
       return false;
     }
-    Cart cart = (Cart) o;
-    return Objects.equals(this.items, cart.items);
+    Pay pay = (Pay) o;
+    return Objects.equals(this.user, pay.user);
   }
 
   @Override
   public int hashCode() {
-    return Objects.hash(items);
+    return Objects.hash(user);
   }
 
   @Override
   public String toString() {
     StringBuilder sb = new StringBuilder();
-    sb.append("class Cart {\n");
+    sb.append("class Pay {\n");
     
-    sb.append("    items: ").append(toIndentedString(items)).append("\n");
+    sb.append("    user: ").append(toIndentedString(user)).append("\n");
     sb.append("}");
     return sb.toString();
   }

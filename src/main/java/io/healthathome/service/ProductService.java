@@ -1,6 +1,6 @@
 package io.healthathome.service;
 
-import io.healthathome.model.Product;
+import io.healthathome.dto.Product;
 import io.healthathome.repository.ProductRepository;
 import org.modelmapper.ModelMapper;
 import org.slf4j.Logger;
@@ -21,19 +21,19 @@ public class ProductService {
     @Autowired
     private ModelMapper mapper;
 
-    public io.healthathome.model.Product getProductById(String id) {
+    public io.healthathome.dto.Product getProductById(String id) {
         return map(repository.findByIdProduct(id));
     }
 
-    public io.healthathome.model.Product getProductByName(String name) {
+    public io.healthathome.dto.Product getProductByName(String name) {
         return map(repository.findByName(name));
     }
 
-    public io.healthathome.model.Product insertOrUpdate(Product product) {
+    public io.healthathome.dto.Product insertOrUpdate(Product product) {
         return map(repository.insert(map(product)));
     }
 
-    public io.healthathome.model.Product update(Product product) {
+    public io.healthathome.dto.Product update(Product product) {
         return map(repository.save(map(product)));
     }
 
@@ -41,7 +41,7 @@ public class ProductService {
         repository.delete(repository.findByIdProduct(id));
     }
 
-    public List<io.healthathome.model.Product> getProductByCategoryId(String id) {
+    public List<io.healthathome.dto.Product> getProductByCategoryId(String id) {
         return repository.getProductByCategoryId(id).stream().map(x -> map(x)).collect(Collectors.toList());
     }
 
