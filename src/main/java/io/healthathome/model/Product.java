@@ -1,11 +1,11 @@
-package io.swagger.model;
+package io.healthathome.model;
 
 import java.util.Objects;
 import com.fasterxml.jackson.annotation.JsonProperty;
-import com.fasterxml.jackson.annotation.JsonCreator;
-import io.swagger.annotations.ApiModel;
 import io.swagger.annotations.ApiModelProperty;
-import io.swagger.model.Category;
+import org.springframework.data.annotation.Id;
+import org.springframework.data.mongodb.core.mapping.Document;
+
 import java.util.ArrayList;
 import java.util.List;
 import javax.validation.Valid;
@@ -16,9 +16,14 @@ import javax.validation.constraints.*;
  */
 @javax.annotation.Generated(value = "io.swagger.codegen.languages.SpringCodegen", date = "2018-03-08T15:45:56.178Z")
 
+@Document(collection = "product")
 public class Product   {
+
+  @Id
+  private String _id;
+
   @JsonProperty("id")
-  private Integer id = null;
+  private String id = null;
 
   @JsonProperty("name")
   private String name = null;
@@ -41,23 +46,31 @@ public class Product   {
   @JsonProperty("category")
   private Category category = null;
 
-  public Product id(Integer id) {
+  public Product id(String id) {
     this.id = id;
     return this;
   }
 
-   /**
+  public String get_id() {
+    return _id;
+  }
+
+  public void set_id(String _id) {
+    this._id = _id;
+  }
+
+  /**
    * Get id
    * @return id
   **/
   @ApiModelProperty(value = "")
 
 
-  public Integer getId() {
+  public String getId() {
     return id;
   }
 
-  public void setId(Integer id) {
+  public void setId(String id) {
     this.id = id;
   }
 

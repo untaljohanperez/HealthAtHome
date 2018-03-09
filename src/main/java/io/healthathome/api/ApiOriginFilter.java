@@ -1,4 +1,4 @@
-package io.swagger.api;
+package io.healthathome.api;
 
 import java.io.IOException;
 

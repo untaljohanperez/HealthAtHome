@@ -3,23 +3,18 @@
  * https://github.com/swagger-api/swagger-codegen
  * Do not edit the class manually.
  */
-package io.swagger.api;
+package io.healthathome.api;
 
-import io.swagger.model.Product;
+import io.healthathome.model.Product;
 
 import io.swagger.annotations.*;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.RequestBody;
-import org.springframework.web.bind.annotation.RequestHeader;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
-import org.springframework.web.bind.annotation.RequestParam;
-import org.springframework.web.bind.annotation.RequestPart;
-import org.springframework.web.multipart.MultipartFile;
 
 import java.util.List;
-import javax.validation.constraints.*;
 import javax.validation.Valid;
 @javax.annotation.Generated(value = "io.swagger.codegen.languages.SpringCodegen", date = "2018-03-08T15:45:56.178Z")
 
@@ -38,7 +33,7 @@ public interface ProductApi {
         produces = { "application/json" }, 
         consumes = { "application/json" },
         method = RequestMethod.POST)
-    ResponseEntity<Void> addProduct(@ApiParam(value = "Product object that needs to be added" ,required=true )  @Valid @RequestBody Product product);
+    ResponseEntity<Product> addProduct(@ApiParam(value = "Product object that needs to be added" ,required=true )  @Valid @RequestBody Product product);
 
 
     @ApiOperation(value = "Deletes a product", notes = "", response = Void.class, authorizations = {
@@ -68,7 +63,7 @@ public interface ProductApi {
     @RequestMapping(value = "/product/category/{id}",
         produces = { "application/json" }, 
         method = RequestMethod.GET)
-    ResponseEntity<List<Product>> getProductByCategoryId(@ApiParam(value = "Category ID of product to return",required=true ) @PathVariable("id") Integer id);
+    ResponseEntity<List<Product>> getProductByCategoryId(@ApiParam(value = "Category ID of product to return",required=true ) @PathVariable("id") String id);
 
 
     @ApiOperation(value = "Find product by ID", notes = "Returns a single product", response = Product.class, authorizations = {
@@ -85,6 +80,21 @@ public interface ProductApi {
         consumes = { "application/json" },
         method = RequestMethod.GET)
     ResponseEntity<Product> getProductById(@ApiParam(value = "",required=true ) @PathVariable("id") String id);
+
+    @ApiOperation(value = "Find product by name", notes = "Returns a single product", response = Product.class, authorizations = {
+            @Authorization(value = "Bearer")
+    }, tags={ "product", })
+    @ApiResponses(value = {
+            @ApiResponse(code = 200, message = "successful operation", response = Product.class),
+            @ApiResponse(code = 400, message = "Invalid ID supplied", response = Void.class),
+            @ApiResponse(code = 401, message = "Unauthorized", response = Void.class),
+            @ApiResponse(code = 404, message = "Product not found", response = Void.class) })
+
+    @RequestMapping(value = "/product/name/{name}",
+            produces = { "application/json" },
+            consumes = { "application/json" },
+            method = RequestMethod.GET)
+    ResponseEntity<Product> getProductByName(@ApiParam(value = "",required=true ) @PathVariable("name") String name);
 
 
     @ApiOperation(value = "Update an existing product", notes = "", response = Void.class, authorizations = {

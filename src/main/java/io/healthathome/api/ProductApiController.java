@@ -1,0 +1,57 @@
+package io.healthathome.api;
+
+import io.healthathome.model.Product;
+
+import io.healthathome.repository.ProductRepository;
+import io.healthathome.service.ProductService;
+import io.swagger.annotations.*;
+
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.http.HttpStatus;
+import org.springframework.http.ResponseEntity;
+import org.springframework.stereotype.Controller;
+import org.springframework.web.bind.annotation.PathVariable;
+import org.springframework.web.bind.annotation.RequestBody;
+
+import java.util.List;
+
+import javax.validation.Valid;
+
+@javax.annotation.Generated(value = "io.swagger.codegen.languages.SpringCodegen", date = "2018-03-08T15:45:56.178Z")
+
+@Controller
+public class ProductApiController implements ProductApi {
+
+    private static final Logger LOGGER = LoggerFactory.getLogger(ProductApiController.class);
+
+    @Autowired
+    private ProductService productService;
+
+    public ResponseEntity<Product> addProduct(@ApiParam(value = "Product object that needs to be added", required = true) @Valid @RequestBody Product product) {
+        return new ResponseEntity<Product>(productService.insertOrUpdate(product), HttpStatus.OK);
+    }
+
+    public ResponseEntity<Void> updateProduct(@ApiParam(value = "Product object that needs to be added", required = true) @Valid @RequestBody Product product) {
+        productService.update(product);
+        return new ResponseEntity<Void>(HttpStatus.OK);
+    }
+
+    public ResponseEntity<Void> deleteProduct(@ApiParam(value = "Product id to delete", required = true) @PathVariable("id") String id) {
+        productService.delete(id);
+        return new ResponseEntity<Void>(HttpStatus.OK);
+    }
+
+    public ResponseEntity<List<Product>> getProductByCategoryId(@ApiParam(value = "Category ID of product to return", required = true) @PathVariable("id") String id) {
+        return new ResponseEntity<List<Product>>(productService.getProductByCategoryId(id), HttpStatus.OK);
+    }
+
+    public ResponseEntity<Product> getProductById(@ApiParam(value = "", required = true) @PathVariable("id") String id) {
+        return new ResponseEntity<Product>(productService.getProductById(id), HttpStatus.OK);
+    }
+
+    public ResponseEntity<Product> getProductByName(@ApiParam(value = "", required = true) @PathVariable("name") String name) {
+        return new ResponseEntity<Product>(productService.getProductByName(name), HttpStatus.OK);
+    }
+}
