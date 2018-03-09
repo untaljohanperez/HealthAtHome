@@ -5,6 +5,7 @@
  */
 package io.healthathome.api;
 
+import com.fasterxml.jackson.core.JsonProcessingException;
 import io.healthathome.dto.Login;
 import io.healthathome.dto.ChangePassword;
 
@@ -43,6 +44,6 @@ public interface LoginApi {
         produces = { "application/json" }, 
         consumes = { "application/json" },
         method = RequestMethod.POST)
-    ResponseEntity<String> login(@ApiParam(value = "" ,required=true )  @Valid @RequestBody Login body);
+    ResponseEntity<String> login(@ApiParam(value = "" ,required=true )  @Valid @RequestBody Login body) throws JsonProcessingException;
 
 }

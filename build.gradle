@@ -53,4 +53,7 @@ dependencies {
     compile 'org.springframework.data:spring-data-mongodb:2.0.5.RELEASE'
 
     compile group: 'org.modelmapper', name: 'modelmapper', version: '0.7.5'
+
+    compile group: 'org.springframework.boot', name: 'spring-boot-starter-mail', version: '2.0.0.RELEASE'
+
 }

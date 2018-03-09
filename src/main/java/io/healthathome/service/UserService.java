@@ -11,6 +11,7 @@ import org.modelmapper.ModelMapper;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.mail.SimpleMailMessage;
 import org.springframework.stereotype.Component;
 
 import java.nio.charset.StandardCharsets;
@@ -25,6 +26,8 @@ public class UserService {
     private UserRepository repository;
     @Autowired
     private ModelMapper mapper;
+    @Autowired
+    private EmailService emailService;
 
     public LoginState login(Login login) {
         LoginState loginState = new LoginState();
@@ -55,17 +58,20 @@ public class UserService {
     }
 
     public io.healthathome.dto.User insert(io.healthathome.dto.User user) {
-        User user_ = map(user);
-        user_.setChangePassword(true);
+        User userToSave = map(user);
+        userToSave.setChangePassword(true);
         String password = UUID.randomUUID().toString();
-        user_.setPassword(stringToHash(password));
-        notifyEmail(user.getUser(), password);
-        return map(repository.insert(user_));
+        userToSave.setPassword(stringToHash(password));
+        notifyEmail(userToSave, password);
+        return map(repository.insert(userToSave));
     }
 
-    private void notifyEmail(String user, String password) {
-        //do some magic
-        LOGGER.info("NOTIFICANDO POR CORREO");
+    private void notifyEmail(User user, String password) {
+        SimpleMailMessage message = new SimpleMailMessage();
+        message.setTo(user.getUser());
+        message.setSubject("User Created!");
+        message.setText("Hi! your new password is " + password);
+        emailService.sendEmail(message);
     }
 
     public io.healthathome.dto.User update(io.healthathome.dto.User user) {

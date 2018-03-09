@@ -1,12 +1,13 @@
 package io.healthathome.api;
 
+import com.fasterxml.jackson.core.JsonProcessingException;
+import com.fasterxml.jackson.databind.ObjectMapper;
 import io.healthathome.dto.ChangePassword;
 import io.healthathome.dto.Login;
-
 import io.healthathome.dto.LoginState;
+import io.healthathome.dto.Message;
 import io.healthathome.service.UserService;
-import io.swagger.annotations.*;
-
+import io.swagger.annotations.ApiParam;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
@@ -20,7 +21,9 @@ import javax.validation.Valid;
 public class LoginApiController implements LoginApi {
 
     @Autowired
-    UserService userService;
+    private UserService userService;
+    @Autowired
+    private ObjectMapper objectMapper;
 
 
     public ResponseEntity<Void> changePassword(@ApiParam(value = "" ,required=true )  @Valid @RequestBody ChangePassword body) {
@@ -28,14 +31,13 @@ public class LoginApiController implements LoginApi {
         return new ResponseEntity<Void>(HttpStatus.OK);
     }
 
-    public ResponseEntity<String> login(@ApiParam(value = "" ,required=true )  @Valid @RequestBody Login body) {
+    public ResponseEntity<String> login(@ApiParam(value = "" ,required=true )  @Valid @RequestBody Login body) throws JsonProcessingException {
         LoginState loginState = userService.login(body);
         if(loginState.isChangePassword())
-            return new ResponseEntity<String>(HttpStatus.NOT_ACCEPTABLE);
+            return new ResponseEntity<String>(objectMapper.writeValueAsString(Message.build("Change Password")), HttpStatus.NOT_ACCEPTABLE);
         else if (loginState.getToken() == null)
-            return new ResponseEntity<String>(HttpStatus.UNAUTHORIZED);
+            return new ResponseEntity<String>(objectMapper.writeValueAsString(Message.build("Incorrect user or password")), HttpStatus.UNAUTHORIZED);
         else
             return new ResponseEntity<String>("{\"token\": \"" +loginState.getToken() + "\"}", HttpStatus.OK);
     }
-
 }
