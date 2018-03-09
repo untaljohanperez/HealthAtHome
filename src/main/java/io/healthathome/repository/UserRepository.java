@@ -7,6 +7,8 @@ import org.springframework.stereotype.Component;
 @Component
 public interface UserRepository extends MongoRepository<User, String> {
 
-    User findByUser(String user);
+    User findFirstByUser(String user);
+
+    boolean existsUserByUser(String user);
 
 }

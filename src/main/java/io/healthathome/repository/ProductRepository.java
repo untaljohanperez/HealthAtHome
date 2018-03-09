@@ -11,7 +11,7 @@ public interface ProductRepository extends MongoRepository<Product, String> {
     Product findByName(String name);
 
     @Query("{'id':'?0'}")
-    Product findByIdProduct(String idProduct);
+    Product findFirstByIdProduct(String idProduct);
 
 
     @Query("{'category.id':'?0'}")

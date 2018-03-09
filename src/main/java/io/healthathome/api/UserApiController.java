@@ -21,6 +21,8 @@ public class UserApiController implements UserApi {
 
 
     public ResponseEntity<Void> addUser(@ApiParam(value = "User object that needs to be added" ,required=true )  @Valid @RequestBody User body) {
+        if (service.existUserByUser(body.getUser()))
+            return new ResponseEntity<Void>(HttpStatus.BAD_REQUEST);
         service.insert(body);
         return new ResponseEntity<Void>(HttpStatus.OK);
     }

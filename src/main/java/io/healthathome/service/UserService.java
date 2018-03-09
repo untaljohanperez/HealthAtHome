@@ -28,7 +28,7 @@ public class UserService {
 
     public LoginState login(Login login) {
         LoginState loginState = new LoginState();
-        User user = repository.findByUser(login.getUser());
+        User user = repository.findFirstByUser(login.getUser());
         if (user == null)
             return loginState;
 
@@ -43,11 +43,15 @@ public class UserService {
     }
 
     public io.healthathome.dto.User updatePassword(ChangePassword dto) {
-        User user = repository.findByUser(dto.getUser());
+        User user = repository.findFirstByUser(dto.getUser());
         String newPassword = stringToHash(dto.getNewPassword());
         user.setPassword(newPassword);
         user.setChangePassword(false);
         return map(repository.save(user));
+    }
+
+    public boolean existUserByUser(String user){
+        return repository.existsUserByUser(user);
     }
 
     public io.healthathome.dto.User insert(io.healthathome.dto.User user) {
@@ -65,11 +69,18 @@ public class UserService {
     }
 
     public io.healthathome.dto.User update(io.healthathome.dto.User user) {
-        return map(repository.save(map(user)));
+        User userStore = repository.findFirstByUser(user.getUser());
+        User userDto = map(user);
+        userStore.setGender(userDto.getGender());
+        userStore.setAge(userDto.getAge());
+        userStore.setName(userDto.getName());
+        userStore.setType(userDto.getType());
+        userStore.setLastName(userDto.getLastName());
+        return map(repository.save(userStore));
     }
 
     public void delete(String user) {
-        repository.delete(repository.findByUser(user));
+        repository.delete(repository.findFirstByUser(user));
     }
 
     private User map(io.healthathome.dto.User user) {
@@ -81,7 +92,7 @@ public class UserService {
     }
 
     public io.healthathome.dto.User getUserByUser(String user) {
-        return map(repository.findByUser(user));
+        return map(repository.findFirstByUser(user));
     }
 
     public String stringToHash(String text) {
