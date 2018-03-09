@@ -3,6 +3,8 @@ package io.healthathome.model;
 import java.util.Objects;
 import com.fasterxml.jackson.annotation.JsonProperty;
 import io.swagger.annotations.ApiModelProperty;
+import org.springframework.data.annotation.Id;
+import org.springframework.data.mongodb.core.mapping.Document;
 
 import javax.validation.constraints.*;
 
@@ -11,17 +13,22 @@ import javax.validation.constraints.*;
  */
 @javax.annotation.Generated(value = "io.swagger.codegen.languages.SpringCodegen", date = "2018-03-08T15:45:56.178Z")
 
+@Document(collection = "user")
 public class User   {
+
+  @Id
+  private String _id;
+
   @JsonProperty("id")
   private Integer id = null;
 
   @JsonProperty("name")
   private String name = null;
 
-  @JsonProperty("email")
-  private String email = null;
+  @JsonProperty("user")
+  private String user = null;
 
-  @JsonProperty("last_name")
+  @JsonProperty("lasName")
   private String lastName = null;
 
   @JsonProperty("gender")
@@ -39,7 +46,25 @@ public class User   {
   @JsonProperty("password")
   private String password = null;
 
-  public User id(Integer id) {
+  private boolean changePassword;
+
+    public String get_id() {
+        return _id;
+    }
+
+    public void set_id(String _id) {
+        this._id = _id;
+    }
+
+    public boolean isChangePassword() {
+        return changePassword;
+    }
+
+    public void setChangePassword(boolean changePassword) {
+        this.changePassword = changePassword;
+    }
+
+    public User id(Integer id) {
     this.id = id;
     return this;
   }
@@ -81,23 +106,23 @@ public class User   {
   }
 
   public User email(String email) {
-    this.email = email;
+    this.user = email;
     return this;
   }
 
    /**
-   * Get email
-   * @return email
+   * Get user
+   * @return user
   **/
   @ApiModelProperty(value = "")
 
 
-  public String getEmail() {
-    return email;
+  public String getUser() {
+    return user;
   }
 
-  public void setEmail(String email) {
-    this.email = email;
+  public void setUser(String user) {
+    this.user = user;
   }
 
   public User lastName(String lastName) {
@@ -232,7 +257,7 @@ public class User   {
     User user = (User) o;
     return Objects.equals(this.id, user.id) &&
         Objects.equals(this.name, user.name) &&
-        Objects.equals(this.email, user.email) &&
+        Objects.equals(this.user, user.user) &&
         Objects.equals(this.lastName, user.lastName) &&
         Objects.equals(this.gender, user.gender) &&
         Objects.equals(this.age, user.age) &&
@@ -243,7 +268,7 @@ public class User   {
 
   @Override
   public int hashCode() {
-    return Objects.hash(id, name, email, lastName, gender, age, type, description, password);
+    return Objects.hash(id, name, user, lastName, gender, age, type, description, password);
   }
 
   @Override
@@ -253,7 +278,7 @@ public class User   {
     
     sb.append("    id: ").append(toIndentedString(id)).append("\n");
     sb.append("    name: ").append(toIndentedString(name)).append("\n");
-    sb.append("    email: ").append(toIndentedString(email)).append("\n");
+    sb.append("    user: ").append(toIndentedString(user)).append("\n");
     sb.append("    lastName: ").append(toIndentedString(lastName)).append("\n");
     sb.append("    gender: ").append(toIndentedString(gender)).append("\n");
     sb.append("    age: ").append(toIndentedString(age)).append("\n");

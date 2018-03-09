@@ -30,6 +30,7 @@ public class ProductService {
     }
 
     public Product update(Product product) {
+        int a = 0;
         return repository.save(product);
     }
 

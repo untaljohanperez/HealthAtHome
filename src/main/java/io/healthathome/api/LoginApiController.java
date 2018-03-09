@@ -3,8 +3,11 @@ package io.healthathome.api;
 import io.healthathome.model.ChangePassword;
 import io.healthathome.model.Login;
 
+import io.healthathome.model.LoginState;
+import io.healthathome.service.UserService;
 import io.swagger.annotations.*;
 
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Controller;
@@ -16,16 +19,23 @@ import javax.validation.Valid;
 @Controller
 public class LoginApiController implements LoginApi {
 
+    @Autowired
+    UserService userService;
 
 
     public ResponseEntity<Void> changePassword(@ApiParam(value = "" ,required=true )  @Valid @RequestBody ChangePassword body) {
-        // do some magic!
+        userService.updatePassword(body);
         return new ResponseEntity<Void>(HttpStatus.OK);
     }
 
-    public ResponseEntity<Void> login(@ApiParam(value = "" ,required=true )  @Valid @RequestBody Login body) {
-        // do some magic!
-        return new ResponseEntity<Void>(HttpStatus.OK);
+    public ResponseEntity<String> login(@ApiParam(value = "" ,required=true )  @Valid @RequestBody Login body) {
+        LoginState loginState = userService.login(body);
+        if(loginState.isChangePassword())
+            return new ResponseEntity<String>(HttpStatus.NOT_ACCEPTABLE);
+        else if (loginState.getToken() == null)
+            return new ResponseEntity<String>(HttpStatus.UNAUTHORIZED);
+        else
+            return new ResponseEntity<String>("{\"token\": \"" +loginState.getToken() + "\"}", HttpStatus.OK);
     }
 
 }
