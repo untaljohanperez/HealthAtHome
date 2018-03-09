@@ -1,11 +1,8 @@
 package io.healthathome.api;
 
 import io.healthathome.model.Product;
-
-import io.healthathome.repository.ProductRepository;
 import io.healthathome.service.ProductService;
-import io.swagger.annotations.*;
-
+import io.swagger.annotations.ApiParam;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -15,11 +12,8 @@ import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.RequestBody;
 
-import java.util.List;
-
 import javax.validation.Valid;
-
-@javax.annotation.Generated(value = "io.swagger.codegen.languages.SpringCodegen", date = "2018-03-08T15:45:56.178Z")
+import java.util.List;
 
 @Controller
 public class ProductApiController implements ProductApi {
@@ -44,7 +38,7 @@ public class ProductApiController implements ProductApi {
     }
 
     public ResponseEntity<List<Product>> getProductByCategoryId(@ApiParam(value = "Category ID of product to return", required = true) @PathVariable("id") String id) {
-        return new ResponseEntity<List<Product>>(productService.getProductByCategoryId(id), HttpStatus.OK);
+        return new ResponseEntity(productService.getProductByCategoryId(id), HttpStatus.OK);
     }
 
     public ResponseEntity<Product> getProductById(@ApiParam(value = "", required = true) @PathVariable("id") String id) {

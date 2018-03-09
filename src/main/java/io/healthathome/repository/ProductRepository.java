@@ -1,6 +1,6 @@
 package io.healthathome.repository;
 
-import io.healthathome.model.Product;
+import io.healthathome.models.Product;
 import org.springframework.data.mongodb.repository.MongoRepository;
 import org.springframework.data.mongodb.repository.Query;
 

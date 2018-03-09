@@ -1,26 +1,15 @@
 package io.healthathome.model;
 
-import java.util.Objects;
 import com.fasterxml.jackson.annotation.JsonProperty;
 import io.swagger.annotations.ApiModelProperty;
-import org.springframework.data.annotation.Id;
-import org.springframework.data.mongodb.core.mapping.Document;
 
+import javax.validation.Valid;
+import javax.validation.constraints.NotNull;
 import java.util.ArrayList;
 import java.util.List;
-import javax.validation.Valid;
-import javax.validation.constraints.*;
+import java.util.Objects;
 
-/**
- * Product
- */
-@javax.annotation.Generated(value = "io.swagger.codegen.languages.SpringCodegen", date = "2018-03-08T15:45:56.178Z")
-
-@Document(collection = "product")
 public class Product   {
-
-  @Id
-  private String _id;
 
   @JsonProperty("id")
   private String id = null;
@@ -49,14 +38,6 @@ public class Product   {
   public Product id(String id) {
     this.id = id;
     return this;
-  }
-
-  public String get_id() {
-    return _id;
-  }
-
-  public void set_id(String _id) {
-    this._id = _id;
   }
 
   /**

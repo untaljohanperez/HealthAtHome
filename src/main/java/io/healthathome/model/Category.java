@@ -1,13 +1,10 @@
 package io.healthathome.model;
 
-import java.util.Objects;
-
-import com.fasterxml.jackson.annotation.JsonIgnore;
 import com.fasterxml.jackson.annotation.JsonProperty;
 import io.swagger.annotations.ApiModelProperty;
-import org.springframework.data.annotation.Id;
 
-import javax.validation.constraints.*;
+import javax.validation.constraints.NotNull;
+import java.util.Objects;
 
 /**
  * Category
@@ -15,10 +12,6 @@ import javax.validation.constraints.*;
 @javax.annotation.Generated(value = "io.swagger.codegen.languages.SpringCodegen", date = "2018-03-08T15:45:56.178Z")
 
 public class Category   {
-
-  @Id
-  @JsonIgnore
-  private String _id;
 
   @JsonProperty("id")
   private String id = null;
@@ -45,14 +38,6 @@ public class Category   {
 
   public void setId(String id) {
     this.id = id;
-  }
-
-  public String get_id() {
-    return _id;
-  }
-
-  public void set_id(String _id) {
-    this._id = _id;
   }
 
   public Category name(String name) {
