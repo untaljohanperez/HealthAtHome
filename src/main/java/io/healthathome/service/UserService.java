@@ -7,6 +7,8 @@ import io.healthathome.dto.Login;
 import io.healthathome.dto.LoginState;
 import io.healthathome.models.User;
 import io.healthathome.repository.UserRepository;
+import io.jsonwebtoken.Jwts;
+import io.jsonwebtoken.SignatureAlgorithm;
 import org.modelmapper.ModelMapper;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -15,7 +17,10 @@ import org.springframework.mail.SimpleMailMessage;
 import org.springframework.stereotype.Component;
 
 import java.nio.charset.StandardCharsets;
+import java.util.Date;
 import java.util.UUID;
+
+import static io.healthathome.configuration.JWTConfig.*;
 
 @Component
 public class UserService {
@@ -39,10 +44,18 @@ public class UserService {
 
         String hashPassword = stringToHash(login.getPassword());
         if (user.getPassword().equals(hashPassword)) {
-            loginState.setToken("SUepererweradsfawfea");
+            loginState.setToken(generateToken(user));
         }
 
         return loginState;
+    }
+
+    private String generateToken(User user) {
+        return Jwts.builder()
+                .setSubject(user.getUser())
+                .setExpiration(new Date(System.currentTimeMillis() + EXPIRATION_TIME))
+                .signWith(SignatureAlgorithm.HS512, SECRET.getBytes())
+                .compact();
     }
 
     public io.healthathome.dto.User updatePassword(ChangePassword dto) {
@@ -53,7 +66,7 @@ public class UserService {
         return map(repository.save(user));
     }
 
-    public boolean existUserByUser(String user){
+    public boolean existUserByUser(String user) {
         return repository.existsUserByUser(user);
     }
 
