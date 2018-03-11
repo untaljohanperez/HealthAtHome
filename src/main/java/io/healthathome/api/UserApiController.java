@@ -1,5 +1,8 @@
 package io.healthathome.api;
 
+import com.fasterxml.jackson.core.JsonProcessingException;
+import com.fasterxml.jackson.databind.ObjectMapper;
+import io.healthathome.dto.Message;
 import io.healthathome.dto.User;
 import io.healthathome.service.UserService;
 import io.swagger.annotations.ApiParam;
@@ -18,13 +21,16 @@ public class UserApiController implements UserApi {
 
     @Autowired
     UserService service;
+    @Autowired
+    private ObjectMapper objectMapper;
 
-
-    public ResponseEntity<Void> addUser(@ApiParam(value = "User object that needs to be added" ,required=true )  @Valid @RequestBody User body) {
-        if (service.existUserByUser(body.getUser()))
-            return new ResponseEntity<Void>(HttpStatus.BAD_REQUEST);
-        service.insert(body);
-        return new ResponseEntity<Void>(HttpStatus.OK);
+    public ResponseEntity<String> addUser(@ApiParam(value = "User object that needs to be added" ,required=true )  @Valid @RequestBody User user) throws JsonProcessingException {
+        if(!service.areValidFieldsByUserType(user))
+            return new ResponseEntity<String>(objectMapper.writeValueAsString(Message.build("Invalid Input")), HttpStatus.BAD_REQUEST);
+        if (service.existUserByUser(user.getUser()))
+            return new ResponseEntity<String>(objectMapper.writeValueAsString(Message.build("User Already Exists")), HttpStatus.BAD_REQUEST);
+        service.insert(user);
+        return new ResponseEntity<String>(objectMapper.writeValueAsString(Message.build("Created")), HttpStatus.OK);
     }
 
     public ResponseEntity<Void> deleteUser(@ApiParam(value = "User to delete",required=true ) @PathVariable("id") String user) {

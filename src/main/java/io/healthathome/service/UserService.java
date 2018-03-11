@@ -5,6 +5,7 @@ import com.google.common.hash.Hashing;
 import io.healthathome.dto.ChangePassword;
 import io.healthathome.dto.Login;
 import io.healthathome.dto.LoginState;
+import io.healthathome.dto.UserType;
 import io.healthathome.models.User;
 import io.healthathome.repository.UserRepository;
 import io.jsonwebtoken.Jwts;
@@ -14,6 +15,7 @@ import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.mail.SimpleMailMessage;
 import org.springframework.stereotype.Component;
+import org.springframework.util.StringUtils;
 
 import java.nio.charset.StandardCharsets;
 import java.util.Date;
@@ -110,4 +112,16 @@ public class UserService {
                 .toString();
     }
 
+    public boolean areValidFieldsByUserType(io.healthathome.dto.User user) {
+        if (UserType.ADMIN.equals(user.getType()))
+            return areValidNameAndAge(user);
+        else if (UserType.CARRIER.equals(user.getType()))
+            return areValidNameAndAge(user) && !StringUtils.isEmpty(user.getWorkingHours());
+        else
+            return true;
+    }
+
+    private boolean areValidNameAndAge(io.healthathome.dto.User user) {
+        return !StringUtils.isEmpty(user.getName()) && user.getAge() != null;
+    }
 }

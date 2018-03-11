@@ -34,18 +34,15 @@ public class User   {
   @JsonProperty("password")
   private String password = null;
 
+  @JsonProperty("workingHours")
+  private String workingHours = null;
+
   public User name(String name) {
     this.name = name;
     return this;
   }
 
-   /**
-   * Get name
-   * @return name
-  **/
-  @ApiModelProperty(required = true, value = "")
-  @NotNull
-
+  @ApiModelProperty(value = "")
 
   public String getName() {
     return name;
@@ -55,8 +52,8 @@ public class User   {
     this.name = name;
   }
 
-  public User email(String email) {
-    this.user = email;
+  public User user(String user) {
+    this.user = user;
     return this;
   }
 
@@ -65,7 +62,7 @@ public class User   {
    * @return user
   **/
   @ApiModelProperty(value = "")
-
+  @NotNull
 
   public String getUser() {
     return user;
@@ -175,6 +172,15 @@ public class User   {
     this.password = password;
   }
 
+  @ApiModelProperty(value = "")
+
+  public String getWorkingHours() {
+    return workingHours;
+  }
+
+  public void setWorkingHours(String workingHours) {
+    this.workingHours = workingHours;
+  }
 
   @Override
   public boolean equals(java.lang.Object o) {

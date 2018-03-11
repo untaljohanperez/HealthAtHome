@@ -5,6 +5,7 @@
  */
 package io.healthathome.api;
 
+import com.fasterxml.jackson.core.JsonProcessingException;
 import io.healthathome.dto.User;
 import io.swagger.annotations.*;
 import org.springframework.http.ResponseEntity;
@@ -31,7 +32,7 @@ public interface UserApi {
         produces = { "application/json" }, 
         consumes = { "application/json" },
         method = RequestMethod.POST)
-    ResponseEntity<Void> addUser(@ApiParam(value = "User object that needs to be added" ,required=true )  @Valid @RequestBody User body);
+    ResponseEntity<String> addUser(@ApiParam(value = "User object that needs to be added" ,required=true )  @Valid @RequestBody User body) throws JsonProcessingException;
 
 
     @ApiOperation(value = "Deletes a user", notes = "", response = Void.class, authorizations = {
