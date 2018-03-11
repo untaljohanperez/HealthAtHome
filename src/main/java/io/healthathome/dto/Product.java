@@ -24,7 +24,7 @@ public class Product   {
   private String medicalCharacteristics = null;
 
   @JsonProperty("volume")
-  private Integer volume = null;
+  private String volume = null;
 
   @JsonProperty("photos")
   private List<String> photos = null;
@@ -40,13 +40,7 @@ public class Product   {
     return this;
   }
 
-  /**
-   * Get id
-   * @return id
-  **/
-  @ApiModelProperty(value = "")
-
-
+  @ApiModelProperty()
   public String getId() {
     return id;
   }
@@ -60,14 +54,8 @@ public class Product   {
     return this;
   }
 
-   /**
-   * Get name
-   * @return name
-  **/
-  @ApiModelProperty(required = true, value = "")
+  @ApiModelProperty(required = true)
   @NotNull
-
-
   public String getName() {
     return name;
   }
@@ -81,13 +69,7 @@ public class Product   {
     return this;
   }
 
-   /**
-   * Get description
-   * @return description
-  **/
-  @ApiModelProperty(value = "")
-
-
+  @ApiModelProperty()
   public String getDescription() {
     return description;
   }
@@ -101,13 +83,7 @@ public class Product   {
     return this;
   }
 
-   /**
-   * Get medicalCharacteristics
-   * @return medicalCharacteristics
-  **/
-  @ApiModelProperty(value = "")
-
-
+  @ApiModelProperty()
   public String getMedicalCharacteristics() {
     return medicalCharacteristics;
   }
@@ -116,23 +92,17 @@ public class Product   {
     this.medicalCharacteristics = medicalCharacteristics;
   }
 
-  public Product volume(Integer volume) {
+  public Product volume(String volume) {
     this.volume = volume;
     return this;
   }
 
-   /**
-   * Get volume
-   * @return volume
-  **/
-  @ApiModelProperty(value = "")
-
-
-  public Integer getVolume() {
+  @ApiModelProperty()
+  public String getVolume() {
     return volume;
   }
 
-  public void setVolume(Integer volume) {
+  public void setVolume(String volume) {
     this.volume = volume;
   }
 
@@ -149,13 +119,7 @@ public class Product   {
     return this;
   }
 
-   /**
-   * Get photos
-   * @return photos
-  **/
-  @ApiModelProperty(value = "")
-
-
+  @ApiModelProperty()
   public List<String> getPhotos() {
     return photos;
   }
@@ -169,13 +133,7 @@ public class Product   {
     return this;
   }
 
-   /**
-   * Get platform
-   * @return platform
-  **/
-  @ApiModelProperty(value = "")
-
-
+  @ApiModelProperty()
   public String getPlatform() {
     return platform;
   }
@@ -189,14 +147,8 @@ public class Product   {
     return this;
   }
 
-   /**
-   * Get category
-   * @return category
-  **/
-  @ApiModelProperty(value = "")
-
+  @ApiModelProperty()
   @Valid
-
   public Category getCategory() {
     return category;
   }
@@ -204,7 +156,6 @@ public class Product   {
   public void setCategory(Category category) {
     this.category = category;
   }
-
 
   @Override
   public boolean equals(java.lang.Object o) {

@@ -119,10 +119,10 @@ public interface ProductApi {
         @ApiResponse(code = 404, message = "User not found", response = Void.class),
         @ApiResponse(code = 405, message = "Validation exception", response = Void.class) })
     
-    @RequestMapping(value = "/product",
+    @RequestMapping(value = "/product/{user}",
         produces = { "application/json" }, 
         consumes = { "application/json" },
         method = RequestMethod.PUT)
-    ResponseEntity<Void> updateProduct(@ApiParam(value = "Product object that needs to be added" ,required=true )  @Valid @RequestBody Product product);
+    ResponseEntity<Void> updateProduct(@ApiParam(value = "Product object that needs to be added" ,required=true )  @Valid @RequestBody Product product, @ApiParam(value = "User",required=true ) @PathVariable("user") String user);
 
 }

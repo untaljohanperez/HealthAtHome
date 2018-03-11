@@ -14,7 +14,7 @@ public class Product {
     private String name;
     private String description;
     private String medicalCharacteristics;
-    private Integer volume;
+    private String volume;
     private List<String> photos;
     private String platform;
     private Category category;
@@ -44,11 +44,11 @@ public class Product {
         this.medicalCharacteristics = medicalCharacteristics;
     }
 
-    public Integer getVolume() {
+    public String getVolume() {
         return volume;
     }
 
-    public void setVolume(Integer volume) {
+    public void setVolume(String volume) {
         this.volume = volume;
     }
 

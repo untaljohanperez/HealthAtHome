@@ -28,11 +28,11 @@ public interface CartApi {
         @ApiResponse(code = 200, message = "Product added to the cart", response = Void.class),
         @ApiResponse(code = 401, message = "Unauthorized", response = Void.class) })
     
-    @RequestMapping(value = "/cart/add-product/{idUser}",
+    @RequestMapping(value = "/cart/add-product/{user}",
         produces = { "application/json" }, 
         consumes = { "application/json" },
         method = RequestMethod.POST)
-    ResponseEntity<Void> cartAddProductIdUserPost(@ApiParam(value = "" ,required=true )  @Valid @RequestBody Item body, @ApiParam(value = "User ID",required=true ) @PathVariable("idUser") String idUser);
+    ResponseEntity<Void> cartAddProductIdUserPost(@ApiParam(value = "" ,required=true )  @Valid @RequestBody Item body, @ApiParam(value = "User ID",required=true ) @PathVariable("user") String user);
 
 
     @ApiOperation(value = "cart", notes = "", response = Void.class, authorizations = {
@@ -56,10 +56,10 @@ public interface CartApi {
         @ApiResponse(code = 200, message = "successful operation", response = Cart.class, responseContainer = "List"),
         @ApiResponse(code = 401, message = "Unauthorized", response = Void.class) })
     
-    @RequestMapping(value = "/cart/{idUser}",
+    @RequestMapping(value = "/cart/{user}",
         produces = { "application/json" }, 
         consumes = { "application/json" },
         method = RequestMethod.GET)
-    ResponseEntity<Cart> getCart(@ApiParam(value = "User ID",required=true ) @PathVariable("idUser") String idUser);
+    ResponseEntity<Cart> getCart(@ApiParam(value = "User ID",required=true ) @PathVariable("user") String user);
 
 }

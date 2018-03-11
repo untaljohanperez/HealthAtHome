@@ -44,8 +44,9 @@ public class ProductApiController implements ProductApi {
         return new ResponseEntity<Void>(HttpStatus.OK);
     }
 
-    public ResponseEntity<Void> updateProduct(@ApiParam(value = "Product object that needs to be added", required = true) @Valid @RequestBody Product product) {
-        productService.update(product);
+    public ResponseEntity<Void> updateProduct(@ApiParam(value = "Product object that needs to be added", required = true) @Valid @RequestBody Product product
+            , @ApiParam(value = "user", required = true) @PathVariable("user") String user) {
+        productService.update(product, user);
         return new ResponseEntity<Void>(HttpStatus.OK);
     }
 

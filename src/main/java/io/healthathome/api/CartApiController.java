@@ -22,8 +22,8 @@ public class CartApiController implements CartApi {
     private CartService cartService;
 
     public ResponseEntity<Void> cartAddProductIdUserPost(@ApiParam(value = "" ,required=true )  @Valid @RequestBody Item body,
-        @ApiParam(value = "User ID",required=true ) @PathVariable("idUser") String idUser) {
-        cartService.addProduct(body, idUser);
+        @ApiParam(value = "User ID",required=true ) @PathVariable("user") String user) {
+        cartService.addProduct(body, user);
         return new ResponseEntity<Void>(HttpStatus.OK);
     }
 
@@ -32,8 +32,8 @@ public class CartApiController implements CartApi {
         return new ResponseEntity<Void>(HttpStatus.OK);
     }
 
-    public ResponseEntity<Cart> getCart(@ApiParam(value = "User ID",required=true ) @PathVariable("idUser") String idUser) {
-        return new ResponseEntity<Cart>(cartService.getCartByUser(idUser), HttpStatus.OK);
+    public ResponseEntity<Cart> getCart(@ApiParam(value = "User ID",required=true ) @PathVariable("user") String user) {
+        return new ResponseEntity<Cart>(cartService.getCartByUser(user), HttpStatus.OK);
     }
 
 }
