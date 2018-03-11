@@ -1,11 +1,11 @@
 package io.healthathome.dto;
 
-import java.util.Objects;
 import com.fasterxml.jackson.annotation.JsonProperty;
 import io.swagger.annotations.ApiModelProperty;
 
 import javax.validation.Valid;
-import javax.validation.constraints.*;
+import javax.validation.constraints.NotNull;
+import java.util.Objects;
 
 /**
  * Item
@@ -17,7 +17,16 @@ public class Item   {
   private Product product = null;
 
   @JsonProperty("quantity")
-  private Integer quantity = null;
+  private int quantity;
+
+  public Item(Product product, Integer quantity) {
+    this.product = product;
+    this.quantity = quantity;
+  }
+
+  public Item() {
+
+  }
 
   public Item product(Product product) {
     this.product = product;
@@ -54,11 +63,11 @@ public class Item   {
   @NotNull
 
 
-  public Integer getQuantity() {
+  public int getQuantity() {
     return quantity;
   }
 
-  public void setQuantity(Integer quantity) {
+  public void setQuantity(int quantity) {
     this.quantity = quantity;
   }
 

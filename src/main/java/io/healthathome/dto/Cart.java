@@ -1,12 +1,12 @@
 package io.healthathome.dto;
 
-import java.util.Objects;
 import com.fasterxml.jackson.annotation.JsonProperty;
 import io.swagger.annotations.ApiModelProperty;
 
+import javax.validation.Valid;
 import java.util.ArrayList;
 import java.util.List;
-import javax.validation.Valid;
+import java.util.Objects;
 
 /**
  * Cart
@@ -16,6 +16,15 @@ import javax.validation.Valid;
 public class Cart   {
   @JsonProperty("items")
   private List<Item> items = null;
+  private String user;
+
+  public String getUser() {
+    return user;
+  }
+
+  public void setUser(String user) {
+    this.user = user;
+  }
 
   public Cart items(List<Item> items) {
     this.items = items;
@@ -39,6 +48,8 @@ public class Cart   {
   @Valid
 
   public List<Item> getItems() {
+    if (items == null)
+      items = new ArrayList<>();
     return items;
   }
 
