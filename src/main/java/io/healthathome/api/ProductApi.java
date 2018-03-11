@@ -6,7 +6,6 @@
 package io.healthathome.api;
 
 import io.healthathome.dto.Product;
-
 import io.swagger.annotations.*;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.PathVariable;
@@ -14,12 +13,25 @@ import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
 
-import java.util.List;
 import javax.validation.Valid;
+import java.util.List;
 @javax.annotation.Generated(value = "io.swagger.codegen.languages.SpringCodegen", date = "2018-03-08T15:45:56.178Z")
 
 @Api(value = "product", description = "the product API")
 public interface ProductApi {
+
+    @ApiOperation(value = "Find product by Category ID", notes = "Returns a single product", response = Product.class, responseContainer = "List", authorizations = {
+            @Authorization(value = "Bearer")
+    }, tags={ "product", })
+    @ApiResponses(value = {
+            @ApiResponse(code = 200, message = "successful operation", response = Product.class, responseContainer = "List"),
+            @ApiResponse(code = 400, message = "Invalid ID supplied", response = Void.class),
+            @ApiResponse(code = 401, message = "Unauthorized", response = Void.class) })
+
+    @RequestMapping(value = "/product",
+            produces = { "application/json" },
+            method = RequestMethod.GET)
+    ResponseEntity<List<Product>> getAllProducts();
 
     @ApiOperation(value = "Add a new product", notes = "", response = Void.class, authorizations = {
         @Authorization(value = "Bearer")
@@ -30,10 +42,10 @@ public interface ProductApi {
         @ApiResponse(code = 405, message = "Invalid input", response = Void.class) })
     
     @RequestMapping(value = "/product",
-        produces = { "application/json" }, 
+        produces = { "application/json" },
         consumes = { "application/json" },
         method = RequestMethod.POST)
-    ResponseEntity<Product> addProduct(@ApiParam(value = "Product object that needs to be added" ,required=true )  @Valid @RequestBody Product product);
+    ResponseEntity<Void> addProduct(@ApiParam(value = "Product object that needs to be added" ,required=true )  @Valid @RequestBody Product product);
 
 
     @ApiOperation(value = "Deletes a product", notes = "", response = Void.class, authorizations = {

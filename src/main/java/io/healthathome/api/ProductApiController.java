@@ -23,18 +23,8 @@ public class ProductApiController implements ProductApi {
     @Autowired
     private ProductService productService;
 
-    public ResponseEntity<Product> addProduct(@ApiParam(value = "Product object that needs to be added", required = true) @Valid @RequestBody Product product) {
-        return new ResponseEntity<Product>(productService.insertOrUpdate(product), HttpStatus.OK);
-    }
-
-
-    public ResponseEntity<Void> updateProduct(@ApiParam(value = "Product object that needs to be added", required = true) @Valid @RequestBody Product product) {
-        productService.update(product);
-        return new ResponseEntity<Void>(HttpStatus.OK);
-    }
-    public ResponseEntity<Void> deleteProduct(@ApiParam(value = "Product id to delete", required = true) @PathVariable("id") String id) {
-        productService.delete(id);
-        return new ResponseEntity<Void>(HttpStatus.OK);
+    public ResponseEntity<List<Product>> getAllProducts() {
+        return new ResponseEntity(productService.getAllProducts(), HttpStatus.OK);
     }
 
     public ResponseEntity<List<Product>> getProductByCategoryId(@ApiParam(value = "Category ID of product to return", required = true) @PathVariable("id") String id) {
@@ -47,5 +37,20 @@ public class ProductApiController implements ProductApi {
 
     public ResponseEntity<Product> getProductByName(@ApiParam(value = "", required = true) @PathVariable("name") String name) {
         return new ResponseEntity<Product>(productService.getProductByName(name), HttpStatus.OK);
+    }
+
+    public ResponseEntity<Void> addProduct(@ApiParam(value = "Product object that needs to be added", required = true) @Valid @RequestBody Product product) {
+        productService.insert(product);
+        return new ResponseEntity<Void>(HttpStatus.OK);
+    }
+
+    public ResponseEntity<Void> updateProduct(@ApiParam(value = "Product object that needs to be added", required = true) @Valid @RequestBody Product product) {
+        productService.update(product);
+        return new ResponseEntity<Void>(HttpStatus.OK);
+    }
+
+    public ResponseEntity<Void> deleteProduct(@ApiParam(value = "Product id to delete", required = true) @PathVariable("id") String id) {
+        productService.delete(id);
+        return new ResponseEntity<Void>(HttpStatus.OK);
     }
 }

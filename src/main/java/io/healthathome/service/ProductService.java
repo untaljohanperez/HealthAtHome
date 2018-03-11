@@ -18,6 +18,10 @@ public class ProductService {
     @Autowired
     private ProductRepository repository;
 
+    public List<io.healthathome.dto.Product> getAllProducts() {
+        return repository.findAll().stream().map(x -> Mapper.map(x)).collect(Collectors.toList());
+    }
+
     public io.healthathome.dto.Product getProductById(String id) {
         return Mapper.map(repository.findFirstByIdProduct(id));
     }
@@ -26,11 +30,11 @@ public class ProductService {
         return Mapper.map(repository.findByName(name));
     }
 
-    public io.healthathome.dto.Product insertOrUpdate(io.healthathome.dto.Product product) {
-        return Mapper.map(repository.insert(Mapper.map(product)));
+    public void insert(io.healthathome.dto.Product product) {
+        repository.insert(Mapper.map(product));
     }
 
-    public io.healthathome.dto.Product update(io.healthathome.dto.Product product) {
+    public void update(io.healthathome.dto.Product product) {
         Product productStore = repository.findFirstByIdProduct(product.getId());
         Product productDto = Mapper.map(product);
         productStore.setName(productDto.getName());
@@ -40,7 +44,7 @@ public class ProductService {
         productStore.setPhotos(productDto.getPhotos());
         productStore.setPlatform(productDto.getPlatform());
         productStore.setCategory(productDto.getCategory());
-        return Mapper.map(repository.save(Mapper.map(product)));
+        repository.save(Mapper.map(product));
     }
 
     public void delete(String id) {
