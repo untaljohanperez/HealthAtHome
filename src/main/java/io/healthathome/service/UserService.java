@@ -9,7 +9,6 @@ import io.healthathome.models.User;
 import io.healthathome.repository.UserRepository;
 import io.jsonwebtoken.Jwts;
 import io.jsonwebtoken.SignatureAlgorithm;
-import org.modelmapper.ModelMapper;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -20,7 +19,8 @@ import java.nio.charset.StandardCharsets;
 import java.util.Date;
 import java.util.UUID;
 
-import static io.healthathome.configuration.JWTConfig.*;
+import static io.healthathome.configuration.JWTConfig.EXPIRATION_TIME;
+import static io.healthathome.configuration.JWTConfig.SECRET;
 
 @Component
 public class UserService {
@@ -29,8 +29,6 @@ public class UserService {
 
     @Autowired
     private UserRepository repository;
-    @Autowired
-    private ModelMapper mapper;
     @Autowired
     private EmailService emailService;
 
@@ -63,7 +61,7 @@ public class UserService {
         String newPassword = stringToHash(dto.getNewPassword());
         user.setPassword(newPassword);
         user.setChangePassword(false);
-        return map(repository.save(user));
+        return Mapper.map(repository.save(user));
     }
 
     public boolean existUserByUser(String user) {
@@ -71,12 +69,12 @@ public class UserService {
     }
 
     public io.healthathome.dto.User insert(io.healthathome.dto.User user) {
-        User userToSave = map(user);
+        User userToSave = Mapper.map(user);
         userToSave.setChangePassword(true);
         String password = UUID.randomUUID().toString();
         userToSave.setPassword(stringToHash(password));
         notifyEmail(userToSave, password);
-        return map(repository.insert(userToSave));
+        return Mapper.map(repository.insert(userToSave));
     }
 
     private void notifyEmail(User user, String password) {
@@ -89,29 +87,21 @@ public class UserService {
 
     public io.healthathome.dto.User update(io.healthathome.dto.User user) {
         User userStore = repository.findFirstByUser(user.getUser());
-        User userDto = map(user);
+        User userDto = Mapper.map(user);
         userStore.setGender(userDto.getGender());
         userStore.setAge(userDto.getAge());
         userStore.setName(userDto.getName());
         userStore.setType(userDto.getType());
         userStore.setLastName(userDto.getLastName());
-        return map(repository.save(userStore));
+        return Mapper.map(repository.save(userStore));
     }
 
     public void delete(String user) {
         repository.delete(repository.findFirstByUser(user));
     }
 
-    private User map(io.healthathome.dto.User user) {
-        return mapper.map(user, User.class);
-    }
-
-    private io.healthathome.dto.User map(User user) {
-        return mapper.map(user, io.healthathome.dto.User.class);
-    }
-
     public io.healthathome.dto.User getUserByUser(String user) {
-        return map(repository.findFirstByUser(user));
+        return Mapper.map(repository.findFirstByUser(user));
     }
 
     public String stringToHash(String text) {
