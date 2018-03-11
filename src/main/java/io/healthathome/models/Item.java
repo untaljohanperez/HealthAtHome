@@ -1,14 +1,14 @@
 package io.healthathome.models;
 
 public class Item {
-    private Product product;
+    private String product;
     private Integer quantity;
 
-    public Product getProduct() {
+    public String getProduct() {
         return product;
     }
 
-    public void setProduct(Product product) {
+    public void setProduct(String product) {
         this.product = product;
     }
 

@@ -8,7 +8,6 @@ package io.healthathome.api;
 import io.healthathome.dto.Cart;
 import io.healthathome.dto.Item;
 import io.healthathome.dto.Pay;
-
 import io.swagger.annotations.*;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.PathVariable;
@@ -16,7 +15,6 @@ import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
 
-import java.util.List;
 import javax.validation.Valid;
 @javax.annotation.Generated(value = "io.swagger.codegen.languages.SpringCodegen", date = "2018-03-08T15:45:56.178Z")
 
@@ -34,7 +32,7 @@ public interface CartApi {
         produces = { "application/json" }, 
         consumes = { "application/json" },
         method = RequestMethod.POST)
-    ResponseEntity<Void> cartAddProductIdUserPost(@ApiParam(value = "" ,required=true )  @Valid @RequestBody Item body, @ApiParam(value = "User ID",required=true ) @PathVariable("idUser") Integer idUser);
+    ResponseEntity<Void> cartAddProductIdUserPost(@ApiParam(value = "" ,required=true )  @Valid @RequestBody Item body, @ApiParam(value = "User ID",required=true ) @PathVariable("idUser") String idUser);
 
 
     @ApiOperation(value = "cart", notes = "", response = Void.class, authorizations = {
@@ -62,6 +60,6 @@ public interface CartApi {
         produces = { "application/json" }, 
         consumes = { "application/json" },
         method = RequestMethod.GET)
-    ResponseEntity<List<Cart>> getCart(@ApiParam(value = "User ID",required=true ) @PathVariable("idUser") Integer idUser);
+    ResponseEntity<Cart> getCart(@ApiParam(value = "User ID",required=true ) @PathVariable("idUser") String idUser);
 
 }
