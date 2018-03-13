@@ -105,7 +105,7 @@ public class CartService {
             cart.setState(false);
             cartRepository.save(cart);
 
-            return PayResponse.newPayResponseFailed("Ok");
+            return PayResponse.newPayResponseSuccess("Ok");
         } catch (Exception e) {
             e.printStackTrace();
             return PayResponse.newPayResponseFailed(e.toString());
