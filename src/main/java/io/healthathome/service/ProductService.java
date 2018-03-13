@@ -41,6 +41,14 @@ public class ProductService {
         productRepository.insert(Mapper.map(product));
     }
 
+    public void delete(String id) {
+        productRepository.delete(productRepository.findFirstByIdProduct(id));
+    }
+
+    public List<io.healthathome.dto.Product> getProductByCategoryId(String id) {
+        return productRepository.getProductByCategoryId(id).stream().map(x -> Mapper.map(x)).collect(Collectors.toList());
+    }
+
     public void update(io.healthathome.dto.Product product, String user) {
         Product productStored = productRepository.findFirstByIdProduct(product.getId());
 
@@ -89,14 +97,6 @@ public class ProductService {
         return (StringUtils.isEmpty(oldValue) && !StringUtils.isEmpty(newValue) ||
                 !StringUtils.isEmpty(oldValue) && StringUtils.isEmpty(newValue) ||
                 oldValue != null && !oldValue.equals(newValue));
-    }
-
-    public void delete(String id) {
-        productRepository.delete(productRepository.findFirstByIdProduct(id));
-    }
-
-    public List<io.healthathome.dto.Product> getProductByCategoryId(String id) {
-        return productRepository.getProductByCategoryId(id).stream().map(x -> Mapper.map(x)).collect(Collectors.toList());
     }
 
 }

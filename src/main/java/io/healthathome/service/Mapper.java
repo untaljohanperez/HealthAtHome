@@ -1,5 +1,6 @@
 package io.healthathome.service;
 
+import io.healthathome.models.Address;
 import io.healthathome.models.Cart;
 import io.healthathome.models.Product;
 import io.healthathome.models.User;
@@ -26,6 +27,9 @@ public class Mapper {
     }
     public static io.healthathome.dto.Product map(Product product) {
         return isNull(product) ? null : mapper.map(product, io.healthathome.dto.Product.class);
+    }
+    public static Address map(io.healthathome.dto.payu.Address address) {
+        return isNull(address) ? null : mapper.map(address, Address.class);
     }
 
     private static <T> boolean isNull(T object) {

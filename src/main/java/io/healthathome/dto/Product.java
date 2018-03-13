@@ -35,6 +35,9 @@ public class Product   {
   @JsonProperty("category")
   private Category category = null;
 
+  @JsonProperty("eachPrice")
+  private double eachPrice;
+
   public Product id(String id) {
     this.id = id;
     return this;
@@ -155,6 +158,14 @@ public class Product   {
 
   public void setCategory(Category category) {
     this.category = category;
+  }
+
+  @ApiModelProperty()
+  public double getEachPrice() {
+    return eachPrice;
+  }
+  public void setEachPrice(double eachPrice) {
+    this.eachPrice = eachPrice;
   }
 
   @Override

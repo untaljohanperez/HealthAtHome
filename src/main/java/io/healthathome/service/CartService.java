@@ -1,15 +1,33 @@
 
 package io.healthathome.service;
 
+import com.fasterxml.jackson.core.JsonProcessingException;
+import com.fasterxml.jackson.databind.ObjectMapper;
+import io.healthathome.dto.Pay;
+import io.healthathome.dto.PayResponse;
+import io.healthathome.dto.payu.*;
 import io.healthathome.models.Cart;
 import io.healthathome.models.Item;
 import io.healthathome.repository.CartRepository;
+import io.healthathome.repository.PayRepository;
+import org.apache.http.HttpEntity;
+import org.apache.http.client.methods.CloseableHttpResponse;
+import org.apache.http.client.methods.HttpPost;
+import org.apache.http.entity.StringEntity;
+import org.apache.http.impl.client.CloseableHttpClient;
+import org.apache.http.impl.client.HttpClients;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Component;
 
-import java.util.ArrayList;
+import java.io.BufferedReader;
+import java.io.IOException;
+import java.io.InputStreamReader;
+import java.io.UnsupportedEncodingException;
+import java.math.BigDecimal;
+import java.time.Instant;
 import java.util.List;
 import java.util.stream.Collectors;
 
@@ -19,12 +37,22 @@ public class CartService {
     private static final Logger LOGGER = LoggerFactory.getLogger(CartService.class);
 
     @Autowired
-    private CartRepository repository;
+    private CartRepository cartRepository;
     @Autowired
     private ProductService productService;
+    @Autowired
+    private PayRepository payRepository;
+    @Autowired
+    private ObjectMapper objectMapper;
+    @Value("${payU.apiKey}")
+    private String apiKey;
+    @Value("${payU.apiLogin}")
+    private String apiLogin;
+    @Value("${payU.urlApi}")
+    private String payuUrl;
 
     public io.healthathome.dto.Cart getCartByUser(String user) {
-        Cart cartStored = repository.getByUserAndStateIsTrue(user);
+        Cart cartStored = cartRepository.getByUserAndStateIsTrue(user);
         io.healthathome.dto.Cart cartDto = new io.healthathome.dto.Cart();
         cartDto.setUser(user);
         if (cartStored == null)
@@ -36,22 +64,152 @@ public class CartService {
     }
 
     public io.healthathome.dto.Cart addProduct(io.healthathome.dto.Item item, String idUser) {
-        Cart cart = repository.getByUserAndStateIsTrue(idUser);
+        Cart cart = cartRepository.getByUserAndStateIsTrue(idUser);
         if (cart == null)
-            cart = new Cart();
+            cart = new Cart(String.valueOf(Instant.now().getEpochSecond()));
         List items = cart.getItems();
-        if (items == null)
-            items = new ArrayList();
-        Item itemModel = new Item();
-        itemModel.setProduct(item.getProduct().getId());
-        itemModel.setQuantity(item.getQuantity());
-        items.add(itemModel);
+        items.add(buildItem(item));
         cart.setItems(items);
         cart.setState(true);
         cart.setUser(idUser);
-        return Mapper.map(repository.save(cart));
+        return Mapper.map(cartRepository.save(cart));
     }
 
+    private Item buildItem(io.healthathome.dto.Item item) {
+        Item itemModel = new Item();
+        itemModel.setProduct(item.getProduct().getId());
+        itemModel.setQuantity(item.getQuantity());
+        itemModel.setEachPrice(item.getProduct().getEachPrice());
+        return itemModel;
+    }
 
+    public PayResponse pay(Pay pay) throws IOException {
+        CloseableHttpClient httpclient = null;
+        try {
+            final Cart cart = cartRepository.getByUserAndStateIsTrue(pay.getUser());
+            if (cart == null)
+                return PayResponse.newPayResponseFailed("Not cart found");
 
+            PayURequest payURequest = getPayURequest(pay, cart);
+            httpclient = HttpClients.createDefault();
+            HttpPost httpPost = getPayUHttpPost(payURequest);
+            CloseableHttpResponse response = httpclient.execute(httpPost);
+
+            int statusCode = response.getStatusLine().getStatusCode();
+            PayUResponse payUResponse = getPayUResponse(response, statusCode);
+
+            if (statusCode != 200 || "ERROR".equals(payUResponse.getCode()))
+                return PayResponse.newPayResponseFailed(payUResponse.getError());
+
+            payRepository.insert(buildPay(pay, cart));
+            cart.setState(false);
+            cartRepository.save(cart);
+
+            return PayResponse.newPayResponseFailed("Ok");
+        } catch (Exception e) {
+            e.printStackTrace();
+            return PayResponse.newPayResponseFailed(e.toString());
+        } finally {
+            if (httpclient != null)
+                httpclient.close();
+        }
+    }
+
+    private PayUResponse getPayUResponse(CloseableHttpResponse response, int statusCode) throws IOException {
+        HttpEntity entityResponse = response.getEntity();
+        BufferedReader reader = new BufferedReader(new InputStreamReader(entityResponse.getContent()));
+        PayUResponse payUResponse = objectMapper.readValue(reader.readLine(), PayUResponse.class);
+
+        LOGGER.info("*****************PayU*******************");
+        LOGGER.info("statusCode: " + statusCode);
+        LOGGER.info("response: " + payUResponse.getError());
+        return payUResponse;
+    }
+
+    private io.healthathome.models.Pay buildPay(Pay pay, Cart cart) {
+        io.healthathome.models.Pay payModel = new io.healthathome.models.Pay();
+        payModel.setCartId(cart.getCartId());
+        payModel.setUser(cart.getUser());
+        payModel.setShippingAddress(Mapper.map(pay.getShippingAddress()));
+        return payModel;
+    }
+
+    private HttpPost getPayUHttpPost(PayURequest payURequest) throws JsonProcessingException, UnsupportedEncodingException {
+        HttpPost httpPost = new HttpPost(payuUrl);
+        httpPost.setHeader("ACCEPT", "application/json");
+        httpPost.setHeader("CONTENT-TYPE", "application/json");
+        String json = objectMapper.writeValueAsString(payURequest);
+        LOGGER.info("PayUJson: " + json);
+        httpPost.setEntity(new StringEntity(json));
+        return httpPost;
+    }
+
+    private PayURequest getPayURequest(Pay pay, Cart cart) {
+        PayURequest payURequest = new PayURequest();
+        payURequest.setLanguage("es");
+        payURequest.setCommand("SUBMIT_TRANSACTION");
+        payURequest.setMerchant(new Merchant(apiKey, apiLogin));
+        payURequest.setTransaction(getTrasaction(pay, cart));
+        payURequest.setTest(true);
+        return payURequest;
+    }
+
+    private Transaction getTrasaction(Pay pay, Cart cart) {
+        Transaction transaction = new Transaction();
+        transaction.setOrder(getOrder(pay, cart));
+        transaction.setPayer(getPayer(pay.getBuyer()));
+        transaction.setCreditCard(pay.getCreditCard());
+        transaction.setExtraParameters(getExtraParameters());
+        transaction.setType("AUTHORIZATION_AND_CAPTURE");
+        transaction.setPaymentMethod("VISA");
+        transaction.setPaymentCountry("CO");
+        transaction.setDeviceSessionId("vghs6tvkcle931686k1900o6e1");
+        transaction.setIpAddress("127.0.0.1");
+        transaction.setCookie("pt1t38347bs6jc9ruv2ecpv7o2");
+        transaction.setUserAgent("Mozilla/5.0 (Windows NT 5.1; rv:18.0) Gecko/20100101 Firefox/18.0");
+        return transaction;
+    }
+
+    private ExtraParameters getExtraParameters() {
+        return new ExtraParameters(1);
+    }
+
+    private Payer getPayer(Buyer buyer) {
+        Payer payer = new Payer();
+        payer.setBillingAddress(buyer.getShippingAddress());
+        payer.setMerchantPayerId(buyer.getMerchantBuyerId());
+        payer.setFullName(buyer.getFullName());
+        payer.setEmailAddress(buyer.getEmailAddress());
+        payer.setContactPhone(buyer.getContactPhone());
+        payer.setDniNumber(buyer.getDniNumber());
+        return payer;
+    }
+
+    private Order getOrder(Pay pay, Cart cart) {
+        Order order = new Order();
+        order.setAccountId(cart.getCartId());
+        order.setReferenceCode("CartPay");
+        order.setDescription("CartPay");
+        order.setLanguage("es");
+        order.setSignature("CartPay");
+        order.setNotifyUrl("https://13.90.130.197/pay/confimation");
+        order.setAdditionalValues(getAdditionalValues(cart));
+        order.setBuyer(pay.getBuyer());
+        order.setShippingAddress(pay.getBuyer().getShippingAddress());
+        return order;
+    }
+
+    private AdditionalValues getAdditionalValues(Cart cart) {
+        AdditionalValues additionalValues = new AdditionalValues();
+        additionalValues.setTX_VALUE(new AdditionalValue(getPayValue(cart), "COP"));
+        additionalValues.setTX_TAX(new AdditionalValue(0, "COP"));
+        additionalValues.setTX_TAX_RETURN_BASE(new AdditionalValue(0, "COP"));
+        return additionalValues;
+    }
+
+    private double getPayValue(Cart cart) {
+        BigDecimal total = cart.getItems().stream().map(x -> BigDecimal.valueOf(x.getQuantity()).multiply(BigDecimal.valueOf(x.getEachPrice()))).reduce(BigDecimal.ZERO, BigDecimal::add);
+        System.out.println("total: " + total.doubleValue());
+        return total.doubleValue();
+    }
 }

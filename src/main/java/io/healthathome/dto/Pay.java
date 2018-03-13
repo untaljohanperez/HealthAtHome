@@ -1,41 +1,53 @@
 package io.healthathome.dto;
 
-import java.util.Objects;
 import com.fasterxml.jackson.annotation.JsonProperty;
+import io.healthathome.dto.payu.Address;
+import io.healthathome.dto.payu.Buyer;
+import io.healthathome.dto.payu.CreditCard;
 import io.swagger.annotations.ApiModelProperty;
 
-import javax.validation.constraints.*;
+import javax.validation.constraints.NotNull;
+import java.util.Objects;
 
-/**
- * Pay
- */
 @javax.annotation.Generated(value = "io.swagger.codegen.languages.SpringCodegen", date = "2018-03-08T15:45:56.178Z")
 
 public class Pay   {
   @JsonProperty("user")
-  private String user = null;
+  private String user;
+  @JsonProperty("buyer")
+  private Buyer buyer;
+  @JsonProperty("shippingAddress")
+  private Address shippingAddress;
+  @JsonProperty("creditCard")
+  private CreditCard creditCard;
 
-  public Pay user(String user) {
-    this.user = user;
-    return this;
-  }
-
-   /**
-   * Get user
-   * @return user
-  **/
-  @ApiModelProperty(required = true, value = "")
+  @ApiModelProperty(required = true)
   @NotNull
-
-
   public String getUser() {
     return user;
   }
-
   public void setUser(String user) {
     this.user = user;
   }
 
+  public Buyer getBuyer() {
+    return buyer;
+  }
+  public void setBuyer(Buyer buyer) {
+    this.buyer = buyer;
+  }
+  public Address getShippingAddress() {
+    return shippingAddress;
+  }
+  public void setShippingAddress(Address shippingAddress) {
+    this.shippingAddress = shippingAddress;
+  }
+  public CreditCard getCreditCard() {
+    return creditCard;
+  }
+  public void setCreditCard(CreditCard creditCard) {
+    this.creditCard = creditCard;
+  }
 
   @Override
   public boolean equals(java.lang.Object o) {
