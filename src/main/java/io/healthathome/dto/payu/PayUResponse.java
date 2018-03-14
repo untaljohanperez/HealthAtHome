@@ -4,7 +4,7 @@ public class PayUResponse {
 
     private String code;
     private String error;
-    private String transactionResponse;
+    private TransactionResponse transactionResponse;
     public String getCode() {
         return code;
     }
@@ -17,10 +17,10 @@ public class PayUResponse {
     public void setError(String error) {
         this.error = error;
     }
-    public String getTransactionResponse() {
+    public TransactionResponse getTransactionResponse() {
         return transactionResponse;
     }
-    public void setTransactionResponse(String transactionResponse) {
+    public void setTransactionResponse(TransactionResponse transactionResponse) {
         this.transactionResponse = transactionResponse;
     }
 }
