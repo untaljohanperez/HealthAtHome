@@ -20,6 +20,8 @@ public class Pay   {
   private Address shippingAddress;
   @JsonProperty("creditCard")
   private CreditCard creditCard;
+  @JsonProperty("paymentMethod")
+  private String paymentMethod;
 
   @ApiModelProperty(required = true)
   @NotNull
@@ -47,6 +49,12 @@ public class Pay   {
   }
   public void setCreditCard(CreditCard creditCard) {
     this.creditCard = creditCard;
+  }
+  public String getPaymentMethod() {
+    return paymentMethod;
+  }
+  public void setPaymentMethod(String paymentMethod) {
+    this.paymentMethod = paymentMethod;
   }
 
   @Override

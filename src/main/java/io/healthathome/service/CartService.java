@@ -27,6 +27,7 @@ import java.io.IOException;
 import java.io.InputStreamReader;
 import java.io.UnsupportedEncodingException;
 import java.math.BigDecimal;
+import java.security.MessageDigest;
 import java.time.Instant;
 import java.util.List;
 import java.util.stream.Collectors;
@@ -50,6 +51,10 @@ public class CartService {
     private String apiLogin;
     @Value("${payU.urlApi}")
     private String payuUrl;
+    @Value("${payU.merchantId}")
+    private String merchantId;
+    @Value("${payU.accountId}")
+    private String accountId;
 
     public io.healthathome.dto.Cart getCartByUser(String user) {
         Cart cartStored = cartRepository.getByUserAndStateIsTrue(user);
@@ -144,7 +149,7 @@ public class CartService {
         return httpPost;
     }
 
-    private PayURequest getPayURequest(Pay pay, Cart cart) {
+    private PayURequest getPayURequest(Pay pay, Cart cart) throws Exception {
         PayURequest payURequest = new PayURequest();
         payURequest.setLanguage("es");
         payURequest.setCommand("SUBMIT_TRANSACTION");
@@ -154,14 +159,14 @@ public class CartService {
         return payURequest;
     }
 
-    private Transaction getTrasaction(Pay pay, Cart cart) {
+    private Transaction getTrasaction(Pay pay, Cart cart) throws Exception {
         Transaction transaction = new Transaction();
         transaction.setOrder(getOrder(pay, cart));
         transaction.setPayer(getPayer(pay.getBuyer()));
         transaction.setCreditCard(pay.getCreditCard());
         transaction.setExtraParameters(getExtraParameters());
         transaction.setType("AUTHORIZATION_AND_CAPTURE");
-        transaction.setPaymentMethod("MASTERCARD");
+        transaction.setPaymentMethod(pay.getPaymentMethod());
         transaction.setPaymentCountry("CO");
         transaction.setDeviceSessionId("vghs6tvkcle931686k1900o6e1");
         transaction.setIpAddress("127.0.0.1");
@@ -185,18 +190,29 @@ public class CartService {
         return payer;
     }
 
-    private Order getOrder(Pay pay, Cart cart) {
+    private Order getOrder(Pay pay, Cart cart) throws Exception {
         Order order = new Order();
-        order.setAccountId(cart.getCartId());
+        order.setAccountId(accountId);
         order.setReferenceCode("CartPay");
         order.setDescription("CartPay");
         order.setLanguage("es");
-        order.setSignature("CartPay");
+        order.setSignature(getSignature(pay, cart));
         order.setNotifyUrl("https://13.90.130.197/pay/confimation");
         order.setAdditionalValues(getAdditionalValues(cart));
         order.setBuyer(pay.getBuyer());
         order.setShippingAddress(pay.getBuyer().getShippingAddress());
         return order;
+    }
+
+    private String getSignature(Pay pay, Cart cart) throws Exception {
+        //"ApiKey~merchantId~referenceCode~tx_value~currency"
+        final String rayita = "~";
+        String signature = apiKey + rayita + merchantId + rayita + cart.getCartId()
+                + rayita + String.valueOf(getPayValue(cart)) + rayita + "COP";
+        String signatureMd5 = MessageDigest.getInstance("MD5").digest(signature.getBytes("UTF-8")).toString();
+        System.out.println("Signature: " + signature);
+        System.out.println("SignatureMD5: " + signatureMd5);
+        return signatureMd5;
     }
 
     private AdditionalValues getAdditionalValues(Cart cart) {
