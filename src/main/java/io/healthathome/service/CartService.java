@@ -161,7 +161,7 @@ public class CartService {
         transaction.setCreditCard(pay.getCreditCard());
         transaction.setExtraParameters(getExtraParameters());
         transaction.setType("AUTHORIZATION_AND_CAPTURE");
-        transaction.setPaymentMethod("VISA");
+        transaction.setPaymentMethod("MASTERCARD");
         transaction.setPaymentCountry("CO");
         transaction.setDeviceSessionId("vghs6tvkcle931686k1900o6e1");
         transaction.setIpAddress("127.0.0.1");
