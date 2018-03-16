@@ -5,13 +5,13 @@
  */
 package io.healthathome.api;
 
+import io.healthathome.dto.Message;
+import io.healthathome.dto.OperationResult;
 import io.healthathome.dto.Product;
 import io.swagger.annotations.*;
 import org.springframework.http.ResponseEntity;
-import org.springframework.web.bind.annotation.PathVariable;
-import org.springframework.web.bind.annotation.RequestBody;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RequestMethod;
+import org.springframework.web.bind.annotation.*;
+import org.springframework.web.multipart.MultipartFile;
 
 import javax.validation.Valid;
 import java.io.IOException;
@@ -109,8 +109,23 @@ public interface ProductApi {
             method = RequestMethod.GET)
     ResponseEntity<Product> getProductByName(@ApiParam(value = "",required=true ) @PathVariable("name") String name);
 
+    @ApiOperation(value = "Update an existing product", notes = "", response = Void.class, authorizations = {
+            @Authorization(value = "Bearer")
+    }, tags={ "product", })
+    @ApiResponses(value = {
+            @ApiResponse(code = 200, message = "Product updated", response = Void.class),
+            @ApiResponse(code = 400, message = "Invalid ID supplied", response = Void.class),
+            @ApiResponse(code = 401, message = "Unauthorized", response = Void.class),
+            @ApiResponse(code = 404, message = "User not found", response = Void.class),
+            @ApiResponse(code = 405, message = "Validation exception", response = Void.class) })
 
-    @ApiOperation(value = "Find product by name", notes = "Returns a single product", response = Product.class, authorizations = {
+    @RequestMapping(value = "/product/{user}",
+            produces = { "application/json" },
+            consumes = { "application/json" },
+            method = RequestMethod.PUT)
+    ResponseEntity<Void> updateProduct(@ApiParam(value = "Product object that needs to be added" ,required=true )  @Valid @RequestBody Product product, @ApiParam(value = "User",required=true ) @PathVariable("user") String user);
+
+    @ApiOperation(value = "Get product iamge", notes = "Returns a single image", response = byte[].class, authorizations = {
             @Authorization(value = "Bearer")
     }, tags={ "product", })
     @ApiResponses(value = {
@@ -126,20 +141,18 @@ public interface ProductApi {
     ResponseEntity<byte[]> getProductImageByIdProductAndIdImage(@ApiParam(value = "",required=true ) @PathVariable("idProduct") String idProduct, @PathVariable("idImage") String idImage) throws IOException;
 
 
-    @ApiOperation(value = "Update an existing product", notes = "", response = Void.class, authorizations = {
-        @Authorization(value = "Bearer")
+    @ApiOperation(value = "Find product by name", notes = "Returns a single product", response = OperationResult.class, authorizations = {
+            @Authorization(value = "Bearer")
     }, tags={ "product", })
-    @ApiResponses(value = { 
-        @ApiResponse(code = 200, message = "Product updated", response = Void.class),
-        @ApiResponse(code = 400, message = "Invalid ID supplied", response = Void.class),
-        @ApiResponse(code = 401, message = "Unauthorized", response = Void.class),
-        @ApiResponse(code = 404, message = "User not found", response = Void.class),
-        @ApiResponse(code = 405, message = "Validation exception", response = Void.class) })
-    
-    @RequestMapping(value = "/product/{user}",
-        produces = { "application/json" }, 
-        consumes = { "application/json" },
-        method = RequestMethod.PUT)
-    ResponseEntity<Void> updateProduct(@ApiParam(value = "Product object that needs to be added" ,required=true )  @Valid @RequestBody Product product, @ApiParam(value = "User",required=true ) @PathVariable("user") String user);
+    @ApiResponses(value = {
+            @ApiResponse(code = 200, message = "successful operation", response = Product.class),
+            @ApiResponse(code = 400, message = "Invalid ID supplied", response = Void.class),
+            @ApiResponse(code = 401, message = "Unauthorized", response = Void.class),
+            @ApiResponse(code = 404, message = "Product not found", response = Void.class) })
 
+    @RequestMapping(value = "/product/{idProduct}/image",
+            produces = { "application/json" },
+            consumes = { "multipart/form-data" },
+            method = RequestMethod.POST)
+    ResponseEntity<Message> uploadImage(@ApiParam(required=true ) @PathVariable("idProduct") String idProduct, @RequestParam("image") MultipartFile file) throws IOException;
 }

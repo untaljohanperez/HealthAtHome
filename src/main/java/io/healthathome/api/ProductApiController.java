@@ -1,5 +1,7 @@
 package io.healthathome.api;
 
+import io.healthathome.dto.Message;
+import io.healthathome.dto.OperationResult;
 import io.healthathome.dto.Product;
 import io.healthathome.service.ProductImageService;
 import io.healthathome.service.ProductService;
@@ -12,6 +14,8 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.RequestBody;
+import org.springframework.web.bind.annotation.RequestParam;
+import org.springframework.web.multipart.MultipartFile;
 
 import javax.validation.Valid;
 import java.io.IOException;
@@ -43,10 +47,6 @@ public class ProductApiController implements ProductApi {
         return new ResponseEntity(productService.getProductByName(name), HttpStatus.OK);
     }
 
-    public ResponseEntity<byte[]> getProductImageByIdProductAndIdImage(@ApiParam(required = true) @PathVariable("idProduct") String idProduct, @ApiParam(required = true) @PathVariable("idImage") String idImage) throws IOException {
-        return new ResponseEntity(productImageService.getProductImageByIdProductAndIdImage(idProduct, idImage), HttpStatus.OK);
-    }
-
     public ResponseEntity<Void> addProduct(@ApiParam(value = "Product object that needs to be added", required = true) @Valid @RequestBody Product product) {
         productService.insert(product);
         return new ResponseEntity(HttpStatus.OK);
@@ -61,5 +61,15 @@ public class ProductApiController implements ProductApi {
     public ResponseEntity<Void> deleteProduct(@ApiParam(value = "Product id to delete", required = true) @PathVariable("id") String id) {
         productService.delete(id);
         return new ResponseEntity(HttpStatus.OK);
+    }
+
+    public ResponseEntity<byte[]> getProductImageByIdProductAndIdImage(@ApiParam(required = true) @PathVariable("idProduct") String idProduct, @ApiParam(required = true) @PathVariable("idImage") String idImage) throws IOException {
+        return new ResponseEntity(productImageService.getProductImageByIdProductAndIdImage(idProduct, idImage), HttpStatus.OK);
+    }
+
+    @Override
+    public ResponseEntity<Message> uploadImage(@ApiParam(required=true ) @PathVariable("idProduct") String idProduct, @RequestParam("image") MultipartFile file) throws IOException {
+        OperationResult operationResult =  productImageService.uploadImage(idProduct, file.getInputStream(), file.getBytes());
+        return new ResponseEntity(Message.build("Uploaded! - idImage = " + operationResult.getMessage()), HttpStatus.OK);
     }
 }

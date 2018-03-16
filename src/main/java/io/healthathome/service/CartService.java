@@ -4,7 +4,7 @@ package io.healthathome.service;
 import com.fasterxml.jackson.core.JsonProcessingException;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import io.healthathome.dto.Pay;
-import io.healthathome.dto.PayResponse;
+import io.healthathome.dto.OperationResult;
 import io.healthathome.dto.payu.*;
 import io.healthathome.models.Cart;
 import io.healthathome.models.Item;
@@ -88,12 +88,12 @@ public class CartService {
         return itemModel;
     }
 
-    public PayResponse pay(Pay pay) throws IOException {
+    public OperationResult pay(Pay pay) throws IOException {
         CloseableHttpClient httpclient = null;
         try {
             final Cart cart = cartRepository.getByUserAndStateIsTrue(pay.getUser());
             if (cart == null)
-                return PayResponse.newPayResponseFailed("Not cart found");
+                return OperationResult.newFailedOperationResponse("Not cart found");
 
             PayURequest payURequest = getPayURequest(pay, cart);
             httpclient = HttpClients.createDefault();
@@ -104,16 +104,16 @@ public class CartService {
             PayUResponse payUResponse = getPayUResponse(response, statusCode);
 
             if (statusCode != 200 || "ERROR".equals(payUResponse.getCode()))
-                return PayResponse.newPayResponseFailed(payUResponse.getError());
+                return OperationResult.newFailedOperationResponse(payUResponse.getError());
 
             payRepository.insert(buildPay(pay, cart));
             cart.setState(false);
             cartRepository.save(cart);
 
-            return PayResponse.newPayResponseSuccess("Ok");
+            return OperationResult.newSuccessOperationResult("Ok");
         } catch (Exception e) {
             e.printStackTrace();
-            return PayResponse.newPayResponseFailed(e.toString());
+            return OperationResult.newFailedOperationResponse(e.toString());
         } finally {
             if (httpclient != null)
                 httpclient.close();

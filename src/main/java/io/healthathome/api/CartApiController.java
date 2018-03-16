@@ -3,7 +3,7 @@ package io.healthathome.api;
 import io.healthathome.dto.Cart;
 import io.healthathome.dto.Item;
 import io.healthathome.dto.Pay;
-import io.healthathome.dto.PayResponse;
+import io.healthathome.dto.OperationResult;
 import io.healthathome.service.CartService;
 import io.swagger.annotations.ApiParam;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -30,8 +30,8 @@ public class CartApiController implements CartApi {
         return new ResponseEntity<Void>(HttpStatus.OK);
     }
 
-    public ResponseEntity<PayResponse> cartPay(@ApiParam(value = "" ,required=true )  @Valid @RequestBody Pay pay) throws IOException {
-        return new ResponseEntity<PayResponse>(cartService.pay(pay), HttpStatus.OK);
+    public ResponseEntity<OperationResult> cartPay(@ApiParam(value = "" ,required=true )  @Valid @RequestBody Pay pay) throws IOException {
+        return new ResponseEntity<OperationResult>(cartService.pay(pay), HttpStatus.OK);
     }
 
     public ResponseEntity<Cart> getCart(@ApiParam(value = "User ID",required=true ) @PathVariable("user") String user) {
