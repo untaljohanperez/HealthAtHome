@@ -37,7 +37,7 @@ public interface LoginApi {
     @ApiOperation(value = "log-in", notes = "", response = Void.class, tags={ "login", })
     @ApiResponses(value = { 
         @ApiResponse(code = 200, message = "Great", response = Void.class),
-        @ApiResponse(code = 401, message = "Don't be a motherfucker", response = Void.class),
+        @ApiResponse(code = 401, message = "Don't be a motherfucker - Incorrect user or password", response = Void.class),
         @ApiResponse(code = 406, message = "Change password", response = Void.class) })
     
     @RequestMapping(value = "/login",

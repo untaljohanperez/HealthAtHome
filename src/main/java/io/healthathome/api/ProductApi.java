@@ -14,6 +14,7 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
 
 import javax.validation.Valid;
+import java.io.IOException;
 import java.util.List;
 @javax.annotation.Generated(value = "io.swagger.codegen.languages.SpringCodegen", date = "2018-03-08T15:45:56.178Z")
 
@@ -107,6 +108,22 @@ public interface ProductApi {
             consumes = { "application/json" },
             method = RequestMethod.GET)
     ResponseEntity<Product> getProductByName(@ApiParam(value = "",required=true ) @PathVariable("name") String name);
+
+
+    @ApiOperation(value = "Find product by name", notes = "Returns a single product", response = Product.class, authorizations = {
+            @Authorization(value = "Bearer")
+    }, tags={ "product", })
+    @ApiResponses(value = {
+            @ApiResponse(code = 200, message = "successful operation", response = Product.class),
+            @ApiResponse(code = 400, message = "Invalid ID supplied", response = Void.class),
+            @ApiResponse(code = 401, message = "Unauthorized", response = Void.class),
+            @ApiResponse(code = 404, message = "Product not found", response = Void.class) })
+
+    @RequestMapping(value = "/product/{idProduct}/image/{idImage}",
+            produces = { "image/jpeg" },
+            consumes = { "*/*" },
+            method = RequestMethod.GET)
+    ResponseEntity<byte[]> getProductImageByIdProductAndIdImage(@ApiParam(value = "",required=true ) @PathVariable("idProduct") String idProduct, @PathVariable("idImage") String idImage) throws IOException;
 
 
     @ApiOperation(value = "Update an existing product", notes = "", response = Void.class, authorizations = {

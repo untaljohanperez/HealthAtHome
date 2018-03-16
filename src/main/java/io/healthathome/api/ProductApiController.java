@@ -1,6 +1,7 @@
 package io.healthathome.api;
 
 import io.healthathome.dto.Product;
+import io.healthathome.service.ProductImageService;
 import io.healthathome.service.ProductService;
 import io.swagger.annotations.ApiParam;
 import org.slf4j.Logger;
@@ -13,6 +14,7 @@ import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.RequestBody;
 
 import javax.validation.Valid;
+import java.io.IOException;
 import java.util.List;
 
 @Controller
@@ -22,6 +24,8 @@ public class ProductApiController implements ProductApi {
 
     @Autowired
     private ProductService productService;
+    @Autowired
+    private ProductImageService productImageService;
 
     public ResponseEntity<List<Product>> getAllProducts() {
         return new ResponseEntity(productService.getAllProducts(), HttpStatus.OK);
@@ -31,27 +35,31 @@ public class ProductApiController implements ProductApi {
         return new ResponseEntity(productService.getProductByCategoryId(id), HttpStatus.OK);
     }
 
-    public ResponseEntity<Product> getProductById(@ApiParam(value = "", required = true) @PathVariable("id") String id) {
-        return new ResponseEntity<Product>(productService.getProductById(id), HttpStatus.OK);
+    public ResponseEntity<Product> getProductById(@ApiParam(required = true) @PathVariable("id") String id) {
+        return new ResponseEntity(productService.getProductById(id), HttpStatus.OK);
     }
 
-    public ResponseEntity<Product> getProductByName(@ApiParam(value = "", required = true) @PathVariable("name") String name) {
-        return new ResponseEntity<Product>(productService.getProductByName(name), HttpStatus.OK);
+    public ResponseEntity<Product> getProductByName(@ApiParam(required = true) @PathVariable("name") String name) {
+        return new ResponseEntity(productService.getProductByName(name), HttpStatus.OK);
+    }
+
+    public ResponseEntity<byte[]> getProductImageByIdProductAndIdImage(@ApiParam(required = true) @PathVariable("idProduct") String idProduct, @ApiParam(required = true) @PathVariable("idImage") String idImage) throws IOException {
+        return new ResponseEntity(productImageService.getProductImageByIdProductAndIdImage(idProduct, idImage), HttpStatus.OK);
     }
 
     public ResponseEntity<Void> addProduct(@ApiParam(value = "Product object that needs to be added", required = true) @Valid @RequestBody Product product) {
         productService.insert(product);
-        return new ResponseEntity<Void>(HttpStatus.OK);
+        return new ResponseEntity(HttpStatus.OK);
     }
 
     public ResponseEntity<Void> updateProduct(@ApiParam(value = "Product object that needs to be added", required = true) @Valid @RequestBody Product product
             , @ApiParam(value = "user", required = true) @PathVariable("user") String user) {
         productService.update(product, user);
-        return new ResponseEntity<Void>(HttpStatus.OK);
+        return new ResponseEntity(HttpStatus.OK);
     }
 
     public ResponseEntity<Void> deleteProduct(@ApiParam(value = "Product id to delete", required = true) @PathVariable("id") String id) {
         productService.delete(id);
-        return new ResponseEntity<Void>(HttpStatus.OK);
+        return new ResponseEntity(HttpStatus.OK);
     }
 }
