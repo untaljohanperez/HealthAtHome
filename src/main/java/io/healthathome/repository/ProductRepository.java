@@ -8,7 +8,7 @@ import java.util.List;
 
 public interface ProductRepository extends MongoRepository<Product, String> {
 
-    Product findByName(String name);
+    Product findFirstByName(String name);
 
     @Query("{'id':'?0'}")
     Product findFirstByIdProduct(String idProduct);
@@ -16,4 +16,5 @@ public interface ProductRepository extends MongoRepository<Product, String> {
 
     @Query("{'category.id':'?0'}")
     List<Product> getProductByCategoryId(String id);
+
 }

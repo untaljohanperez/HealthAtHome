@@ -1,5 +1,6 @@
 package io.healthathome.service;
 
+import com.google.common.base.Strings;
 import io.healthathome.models.ChangedProperty;
 import io.healthathome.models.Product;
 import io.healthathome.models.ProductChangeLog;
@@ -31,11 +32,13 @@ public class ProductService {
     }
 
     public io.healthathome.dto.Product getProductByName(String name) {
-        return Mapper.map(productRepository.findByName(name));
+        return Mapper.map(productRepository.findFirstByName(name));
     }
 
-    public void insert(io.healthathome.dto.Product product) {
-        productRepository.insert(Mapper.map(product));
+    public void insert(io.healthathome.dto.Product productDto) {
+        Product productModel = Mapper.map(productDto);
+        productModel.setId(Strings.padStart(String.valueOf(productRepository.count()), 3, '0'));
+        productRepository.insert(productModel);
     }
 
     public void delete(String id) {
@@ -68,7 +71,6 @@ public class ProductService {
         productStored.setDescription(productDto.getDescription());
         productStored.setMedicalCharacteristics(productDto.getMedicalCharacteristics());
         productStored.setVolume(productDto.getVolume());
-        productStored.setPhotos(productDto.getPhotos());
         productStored.setPlatform(productDto.getPlatform());
         productStored.setCategory(productDto.getCategory());
     }

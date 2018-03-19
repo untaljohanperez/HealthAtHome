@@ -27,7 +27,7 @@ import java.io.InputStream;
 @Component
 public class ProductImageService {
 
-    private static final Logger LOGGER = LoggerFactory.getLogger(CartService.class);
+    private static final Logger LOGGER = LoggerFactory.getLogger(ProductImageService.class);
 
     private static final String IMAGE_PREFIX = "product_";
     private static final String BUCKET_FOLDER = "product/";
