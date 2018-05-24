@@ -46,7 +46,7 @@ public interface ProductApi {
         produces = { "application/json" },
         consumes = { "application/json" },
         method = RequestMethod.POST)
-    ResponseEntity<Void> addProduct(@ApiParam(value = "Product object that needs to be added" ,required=true )  @Valid @RequestBody Product product);
+    ResponseEntity<Message> addProduct(@ApiParam(value = "Product object that needs to be added" ,required=true )  @Valid @RequestBody Product product);
 
 
     @ApiOperation(value = "Deletes a product", notes = "", response = Void.class, authorizations = {

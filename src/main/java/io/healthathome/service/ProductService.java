@@ -35,10 +35,12 @@ public class ProductService {
         return Mapper.map(productRepository.findFirstByName(name));
     }
 
-    public void insert(io.healthathome.dto.Product productDto) {
+    public String insert(io.healthathome.dto.Product productDto) {
         Product productModel = Mapper.map(productDto);
-        productModel.setId(Strings.padStart(String.valueOf(productRepository.count()), 3, '0'));
+        String id = Strings.padStart(String.valueOf(productRepository.count()), 3, '0');
+        productModel.setId(id);
         productRepository.insert(productModel);
+        return id;
     }
 
     public void delete(String id) {

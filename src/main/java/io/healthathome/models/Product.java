@@ -18,6 +18,7 @@ public class Product {
     private List<String> photos;
     private String platform;
     private Category category;
+    private double eachPrice;
 
     public String getId() {
         return id;
