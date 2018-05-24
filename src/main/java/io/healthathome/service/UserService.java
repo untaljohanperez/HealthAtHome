@@ -58,8 +58,12 @@ public class UserService {
                 .compact();
     }
 
-    public io.healthathome.dto.User updatePassword(ChangePassword dto) {
+    public io.healthathome.dto.User updatePassword(ChangePassword dto) throws Exception {
         User user = repository.findFirstByUser(dto.getUser());
+
+        if (!user.getPassword().equalsIgnoreCase(dto.getOldPassword()))
+            throw new Exception("Incorrect password");
+
         String newPassword = stringToHash(dto.getNewPassword());
         user.setPassword(newPassword);
         user.setChangePassword(false);
@@ -73,7 +77,7 @@ public class UserService {
     public io.healthathome.dto.User insert(io.healthathome.dto.User user) {
         User userToSave = Mapper.map(user);
         userToSave.setChangePassword(true);
-        String password = UUID.randomUUID().toString();
+        String password = UUID.randomUUID().toString().substring(0, 8);
         userToSave.setPassword(stringToHash(password));
         notifyEmail(userToSave, password);
         return Mapper.map(repository.insert(userToSave));

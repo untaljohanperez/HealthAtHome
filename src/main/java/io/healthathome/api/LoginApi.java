@@ -9,6 +9,7 @@ import com.fasterxml.jackson.core.JsonProcessingException;
 import io.healthathome.dto.Login;
 import io.healthathome.dto.ChangePassword;
 
+import io.healthathome.dto.Message;
 import io.swagger.annotations.*;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.RequestBody;
@@ -31,7 +32,7 @@ public interface LoginApi {
         produces = { "application/json" }, 
         consumes = { "application/json" },
         method = RequestMethod.POST)
-    ResponseEntity<Void> changePassword(@ApiParam(value = "" ,required=true )  @Valid @RequestBody ChangePassword body);
+    ResponseEntity<Message> changePassword(@ApiParam(value = "" ,required=true )  @Valid @RequestBody ChangePassword body);
 
 
     @ApiOperation(value = "log-in", notes = "", response = Void.class, tags={ "login", })

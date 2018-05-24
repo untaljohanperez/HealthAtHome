@@ -29,9 +29,13 @@ public class LoginApiController implements LoginApi {
     private ObjectMapper objectMapper;
 
 
-    public ResponseEntity<Void> changePassword(@ApiParam(value = "" ,required=true )  @Valid @RequestBody ChangePassword body) {
-        userService.updatePassword(body);
-        return new ResponseEntity<Void>(HttpStatus.OK);
+    public ResponseEntity<Message> changePassword(@ApiParam(value = "" ,required=true )  @Valid @RequestBody ChangePassword body) {
+        try {
+            userService.updatePassword(body);
+            return new ResponseEntity<Message>(HttpStatus.OK);
+        } catch (Exception e) {
+            return new ResponseEntity<Message>(Message.build(e.getMessage()), HttpStatus.OK);
+        }
     }
 
     public ResponseEntity<String> login(@ApiParam(value = "" ,required=true )  @Valid @RequestBody Login body) throws JsonProcessingException {
