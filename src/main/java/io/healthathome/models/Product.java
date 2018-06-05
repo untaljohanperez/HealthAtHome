@@ -44,36 +44,34 @@ public class Product {
     public void setMedicalCharacteristics(String medicalCharacteristics) {
         this.medicalCharacteristics = medicalCharacteristics;
     }
-
     public String getVolume() {
         return volume;
     }
-
     public void setVolume(String volume) {
         this.volume = volume;
     }
-
     public List<String> getPhotos() {
         return photos;
     }
-
     public void setPhotos(List<String> photos) {
         this.photos = photos;
     }
-
     public String getPlatform() {
         return platform;
     }
-
     public void setPlatform(String platform) {
         this.platform = platform;
     }
-
     public Category getCategory() {
         return category;
     }
-
     public void setCategory(Category category) {
         this.category = category;
+    }
+    public double getEachPrice() {
+        return eachPrice;
+    }
+    public void setEachPrice(double eachPrice) {
+        this.eachPrice = eachPrice;
     }
 }
