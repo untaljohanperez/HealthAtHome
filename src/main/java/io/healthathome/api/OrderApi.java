@@ -20,7 +20,7 @@ import java.util.List;
 @Api(value = "order", description = "the order API")
 public interface OrderApi {
 
-    @ApiOperation(value = "order", notes = "", response = Order.class, responseContainer = "List", authorizations = {
+    @ApiOperation(value = "order", notes = "", response = List.class, responseContainer = "List", authorizations = {
         @Authorization(value = "Bearer")
     }, tags={ "order", })
     @ApiResponses(value = {
@@ -37,7 +37,7 @@ public interface OrderApi {
             @Authorization(value = "Bearer")
     }, tags={ "order", })
     @ApiResponses(value = {
-            @ApiResponse(code = 200, message = "successful operation", response = Cart.class, responseContainer = "List"),
+            @ApiResponse(code = 200, message = "successful operation", response = Order.class, responseContainer = "List"),
             @ApiResponse(code = 401, message = "Unauthorized", response = Void.class) })
 
     @RequestMapping(value = "/order/{idOrder}",
