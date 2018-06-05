@@ -61,7 +61,7 @@ public class UserService {
     public io.healthathome.dto.User updatePassword(ChangePassword dto) throws Exception {
         User user = repository.findFirstByUser(dto.getUser());
 
-        if (!user.getPassword().equalsIgnoreCase(dto.getOldPassword()))
+        if (!user.getPassword().equalsIgnoreCase(stringToHash(dto.getOldPassword())))
             throw new Exception("Incorrect password");
 
         String newPassword = stringToHash(dto.getNewPassword());

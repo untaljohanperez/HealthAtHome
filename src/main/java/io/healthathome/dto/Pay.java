@@ -22,6 +22,8 @@ public class Pay   {
   private CreditCard creditCard;
   @JsonProperty("paymentMethod")
   private String paymentMethod;
+  @JsonProperty("test")
+  private boolean test = false;
 
   @ApiModelProperty(required = true)
   @NotNull
@@ -57,6 +59,14 @@ public class Pay   {
     this.paymentMethod = paymentMethod;
   }
 
+  public boolean isTest() {
+    return test;
+  }
+
+  public void setTest(boolean test) {
+    this.test = test;
+  }
+
   @Override
   public boolean equals(java.lang.Object o) {
     if (this == o) {
@@ -84,10 +94,6 @@ public class Pay   {
     return sb.toString();
   }
 
-  /**
-   * Convert the given object to string with each line indented by 4 spaces
-   * (except the first line).
-   */
   private String toIndentedString(java.lang.Object o) {
     if (o == null) {
       return "null";

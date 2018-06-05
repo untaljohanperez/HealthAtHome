@@ -3,6 +3,7 @@ package io.healthathome.service;
 
 import com.fasterxml.jackson.core.JsonProcessingException;
 import com.fasterxml.jackson.databind.ObjectMapper;
+import io.healthathome.dto.ItemInput;
 import io.healthathome.dto.Pay;
 import io.healthathome.dto.OperationResult;
 import io.healthathome.dto.payu.*;
@@ -56,19 +57,33 @@ public class CartService {
     @Value("${payU.accountId}")
     private String accountId;
 
+
     public io.healthathome.dto.Cart getCartByUser(String user) {
         Cart cartStored = cartRepository.getByUserAndStateIsTrue(user);
         io.healthathome.dto.Cart cartDto = new io.healthathome.dto.Cart();
         cartDto.setUser(user);
         if (cartStored == null)
             return cartDto;
-        cartDto.setItems(cartStored.getItems().stream()
-                .map(x -> new io.healthathome.dto.Item(productService.getProductById(x.getProduct()), x.getQuantity()))
-                .collect(Collectors.toList()));
+        setItemsToCart(cartStored, cartDto);
         return cartDto;
     }
 
-    public io.healthathome.dto.Cart addProduct(io.healthathome.dto.Item item, String idUser) {
+    public io.healthathome.dto.Cart getCartById(String id) {
+        Cart cartStored = cartRepository.findById(id).get();
+        io.healthathome.dto.Cart cartDto = new io.healthathome.dto.Cart();
+        if (cartStored == null)
+            return cartDto;
+        setItemsToCart(cartStored, cartDto);
+        return cartDto;
+    }
+
+    private void setItemsToCart(Cart cartStored, io.healthathome.dto.Cart cartDto) {
+        cartDto.setItems(cartStored.getItems().stream()
+                .map(x -> new io.healthathome.dto.Item(productService.getProductById(x.getProduct()), x.getQuantity()))
+                .collect(Collectors.toList()));
+    }
+
+    public io.healthathome.dto.Cart addProduct(ItemInput item, String idUser) {
         Cart cart = cartRepository.getByUserAndStateIsTrue(idUser);
         if (cart == null)
             cart = new Cart(String.valueOf(Instant.now().getEpochSecond()));
@@ -80,7 +95,7 @@ public class CartService {
         return Mapper.map(cartRepository.save(cart));
     }
 
-    private Item buildItem(io.healthathome.dto.Item item) {
+    private Item buildItem(ItemInput item) {
         Item itemModel = new Item();
         itemModel.setProduct(item.getProduct().getId());
         itemModel.setQuantity(item.getQuantity());
@@ -95,22 +110,26 @@ public class CartService {
             if (cart == null)
                 return OperationResult.newFailedOperationResponse("Not cart found");
 
-            PayURequest payURequest = getPayURequest(pay, cart);
-            httpclient = HttpClients.createDefault();
-            HttpPost httpPost = getPayUHttpPost(payURequest);
-            CloseableHttpResponse response = httpclient.execute(httpPost);
+            if (!pay.isTest()) {
 
-            int statusCode = response.getStatusLine().getStatusCode();
-            PayUResponse payUResponse = getPayUResponse(response, statusCode);
+                PayURequest payURequest = getPayURequest(pay, cart);
+                httpclient = HttpClients.createDefault();
+                HttpPost httpPost = getPayUHttpPost(payURequest);
+                CloseableHttpResponse response = httpclient.execute(httpPost);
 
-            if (statusCode != 200 || "ERROR".equals(payUResponse.getCode()))
-                return OperationResult.newFailedOperationResponse(payUResponse.getError());
+                int statusCode = response.getStatusLine().getStatusCode();
+                PayUResponse payUResponse = getPayUResponse(response, statusCode);
 
-            payRepository.insert(buildPay(pay, cart));
+                if (statusCode != 200 || "ERROR".equals(payUResponse.getCode()))
+                    return OperationResult.newFailedOperationResponse(payUResponse.getError());
+
+            }
+
+            io.healthathome.models.Pay payModel = payRepository.insert(buildPay(pay, cart));
             cart.setState(false);
             cartRepository.save(cart);
 
-            return OperationResult.newSuccessOperationResult("Ok");
+            return OperationResult.newSuccessOperationResult(payModel.get_id());
         } catch (Exception e) {
             e.printStackTrace();
             return OperationResult.newFailedOperationResponse(e.toString());

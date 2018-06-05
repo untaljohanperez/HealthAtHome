@@ -161,6 +161,7 @@ public class Product   {
   }
 
   @ApiModelProperty()
+  @NotNull
   public double getEachPrice() {
     return eachPrice;
   }

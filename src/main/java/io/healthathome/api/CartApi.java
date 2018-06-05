@@ -5,10 +5,7 @@
  */
 package io.healthathome.api;
 
-import io.healthathome.dto.Cart;
-import io.healthathome.dto.Item;
-import io.healthathome.dto.Pay;
-import io.healthathome.dto.OperationResult;
+import io.healthathome.dto.*;
 import io.swagger.annotations.*;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.PathVariable;
@@ -35,7 +32,7 @@ public interface CartApi {
         produces = { "application/json" }, 
         consumes = { "application/json" },
         method = RequestMethod.POST)
-    ResponseEntity<Void> cartAddProductIdUserPost(@ApiParam(value = "" ,required=true )  @Valid @RequestBody Item body, @ApiParam(value = "User ID",required=true ) @PathVariable("user") String user);
+    ResponseEntity<Void> cartAddProductIdUserPost(@ApiParam(value = "" ,required=true )  @Valid @RequestBody ItemInput body, @ApiParam(value = "User ID",required=true ) @PathVariable("user") String user);
 
 
     @ApiOperation(value = "cart", notes = "", response = Void.class, authorizations = {

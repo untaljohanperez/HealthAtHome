@@ -1,9 +1,6 @@
 package io.healthathome.api;
 
-import io.healthathome.dto.Cart;
-import io.healthathome.dto.Item;
-import io.healthathome.dto.Pay;
-import io.healthathome.dto.OperationResult;
+import io.healthathome.dto.*;
 import io.healthathome.service.CartService;
 import io.swagger.annotations.ApiParam;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -24,9 +21,9 @@ public class CartApiController implements CartApi {
     @Autowired
     private CartService cartService;
 
-    public ResponseEntity<Void> cartAddProductIdUserPost(@ApiParam(value = "" ,required=true )  @Valid @RequestBody Item body,
-        @ApiParam(value = "User ID",required=true ) @PathVariable("user") String user) {
-        cartService.addProduct(body, user);
+    public ResponseEntity<Void> cartAddProductIdUserPost(@ApiParam(value = "" ,required=true )  @Valid @RequestBody ItemInput item,
+        @ApiParam(value = "User ID", required=true ) @PathVariable("user") String user) {
+        cartService.addProduct(item, user);
         return new ResponseEntity<Void>(HttpStatus.OK);
     }
 
@@ -37,5 +34,4 @@ public class CartApiController implements CartApi {
     public ResponseEntity<Cart> getCart(@ApiParam(value = "User ID",required=true ) @PathVariable("user") String user) {
         return new ResponseEntity<Cart>(cartService.getCartByUser(user), HttpStatus.OK);
     }
-
 }
