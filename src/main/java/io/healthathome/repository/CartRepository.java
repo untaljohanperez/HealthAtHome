@@ -7,6 +7,7 @@ public interface CartRepository extends MongoRepository<Cart, String> {
 
     Cart getByUserAndStateIsTrue(String user);
 
+    Cart getByCartId(String cartId);
 
 
 }

@@ -69,7 +69,7 @@ public class CartService {
     }
 
     public io.healthathome.dto.Cart getCartById(String id) {
-        Cart cartStored = cartRepository.findById(id).get();
+        Cart cartStored = cartRepository.getByCartId(id);
         io.healthathome.dto.Cart cartDto = new io.healthathome.dto.Cart();
         if (cartStored == null)
             return cartDto;
